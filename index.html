@@ -225,7 +225,7 @@ input[type="text"]:focus, textarea:focus { border-color: var(--accent); box-shad
 /* Barre d'onglets flottante */
 .tabs { position: fixed; z-index: 5; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); pointer-events: none; }
-.tabs .inner { pointer-events: auto; max-width: 536px; margin: 0 auto; height: var(--nav-h); display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; padding: 6px;
+.tabs .inner { pointer-events: auto; max-width: 536px; margin: 0 auto; height: var(--nav-h); display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 6px;
   box-sizing: border-box; background: var(--surface); border-radius: 24px; box-shadow: 0 10px 30px rgba(90,30,30,.16), 0 0 0 1px var(--line); }
 .tab { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--muted); font-size: .72rem; font-weight: 600; position: relative; border-radius: 18px; transition: background .2s ease, color .2s ease; }
 .tab svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
@@ -374,7 +374,6 @@ details.tbl .tw { overflow-x: auto; }
   <main id="view-semaine" class="stack" hidden></main>
   <main id="view-calendrier" class="stack" hidden></main>
   <main id="view-comptes" class="stack" hidden></main>
-  <main id="view-fil" class="stack" hidden></main>
   <main id="view-chat" class="stack" hidden></main>
 </div>
 
@@ -386,8 +385,6 @@ details.tbl .tw { overflow-x: auto; }
       <svg viewBox="0 0 24 24"><path d="M4 19.5h16M6.5 16V11M11 16V6.5M15.5 16v-6M20 16V8"/></svg>Évolution</button>
     <button class="tab" role="tab" data-tab="comptes" aria-selected="false" type="button">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M15 8.8a3.6 3.6 0 1 0 0 6.4M7.5 11h6M7.5 13.5h6"/></svg>Comptes</button>
-    <button class="tab" role="tab" data-tab="fil" aria-selected="false" type="button">
-      <svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></svg>Fil<span class="badge" id="fil-badge" hidden></span></button>
     <button class="tab" role="tab" data-tab="chat" aria-selected="false" type="button">
       <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.1A8 8 0 1 1 20 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>Chat<span class="badge" id="chat-badge" hidden></span></button>
   </div>
@@ -589,7 +586,7 @@ details.tbl .tw { overflow-x: auto; }
 
   // ---- Vues ----
   function show(v) {
-    for (const x of ["onboard", "semaine", "calendrier", "comptes", "fil", "chat"]) $("view-" + x).hidden = x !== v;
+    for (const x of ["onboard", "semaine", "calendrier", "comptes", "chat"]) $("view-" + x).hidden = x !== v;
     $("composer").hidden = v !== "chat";
     document.body.classList.toggle("in-chat", v === "chat");
     const inGroup = v !== "onboard";
@@ -598,7 +595,7 @@ details.tbl .tw { overflow-x: auto; }
   }
   function setView(v) {
     view = v; show(v); render();
-    if (v === "fil") { filPrevSeen = lastSeen; markSeen(); render(); }
+    if (v === "semaine") { filPrevSeen = lastSeen; markSeen(); render(); }
     try { localStorage.setItem("cs-view", v); } catch (_) {}
     if (v === "chat") { markChatSeen(); scrollChat(true); } else window.scrollTo(0, 0);
   }
@@ -687,11 +684,11 @@ details.tbl .tw { overflow-x: auto; }
         if (fresh.length) toast(feedText(fresh[0]), 4500);
       }
       feedLoaded = true;
-      if (view === "fil") markSeen();
+      if (view === "semaine") markSeen();
       renderBadge(); render();
     }, err));
     let start = "semaine"; try { start = localStorage.getItem("cs-view") || "semaine"; } catch (_) {}
-    setView(["semaine", "calendrier", "comptes", "fil", "chat"].includes(start) ? start : "semaine");
+    setView(["semaine", "calendrier", "comptes", "chat"].includes(start) ? start : "semaine");
   }
 
 
@@ -813,7 +810,7 @@ details.tbl .tw { overflow-x: auto; }
     inp.focus();
   });
 
-  function renderBadge() { const n = unread().length; const b = $("fil-badge"); b.hidden = !n || view === "fil"; b.textContent = n > 9 ? "9+" : String(n); }
+  function renderBadge() {}
   // Une note par semaine terminée, écrite par le premier qui ouvre l'app ensuite (id fixe : pas de doublon)
   let verdictTried = {};
   async function writeVerdictNote() {
@@ -996,7 +993,6 @@ details.tbl .tw { overflow-x: auto; }
     if (view === "semaine") renderSemaine();
     else if (view === "calendrier") renderCalendrier();
     else if (view === "comptes") renderComptes();
-    else if (view === "fil") renderFil();
     else if (view === "chat") renderChat();
   }
   function statusPill(r, uid, w) {
@@ -1026,12 +1022,12 @@ details.tbl .tw { overflow-x: auto; }
     root.append(bar);
 
     // Notifications non lues
-    const un = unread();
+    const un = feed.filter((f) => f.uid !== myId && f.at > filPrevSeen);
     if (un.length) {
       const a = el("div", "alert");
       a.append(el("strong", null, un.length > 1 ? `${un.length} nouvelles du groupe` : "Nouveau dans le groupe"));
       un.slice(0, 3).forEach((f) => { a.append(el("span", null, feedText(f))); if (f.kind === "goal") { const c = el("div", "coach"); c.append(el("q", null, goalMsg(f.uid, f.week))); a.append(c); } });
-      const b = el("button", "btn quiet small", "Tout voir dans le fil"); b.type = "button"; b.style.alignSelf = "flex-start"; b.style.paddingInline = "0"; b.onclick = () => setView("fil");
+      const b = el("button", "btn quiet small", "Ouvrir le chat"); b.type = "button"; b.style.alignSelf = "flex-start"; b.style.paddingInline = "0"; b.onclick = () => setView("chat");
       a.append(b); root.append(a);
     }
 
@@ -1373,25 +1369,7 @@ details.tbl .tw { overflow-x: auto; }
     root.append(rc);
   }
 
-  function renderFil() {
-    const root = $("view-fil"); root.replaceChildren();
-    const c = el("div", "card stack"); c.append(el("h2", null, "Fil du groupe"));
-    c.append(el("p", "sub", "Chaque séance, chaque semaine accomplie, chaque joker et chaque résultat du dimanche apparaît ici. Quand l'app est ouverte, tu reçois une alerte dès que ton binôme note quelque chose."));
-    const ul = el("ul", "list feed");
-    if (!feed.length) ul.append(el("li", "empty", "Rien pour l'instant. Note ta première séance dans l'onglet Semaine."));
-    const seenBefore = filPrevSeen;
-    feed.forEach((f) => {
-      const li = el("li"); if (f.uid !== myId && f.at > seenBefore) li.classList.add("new");
-      const t = el("div", "t"); t.append(el("span", null, feedText(f)));
-      if (f.note) t.append(el("small", null, f.note));
-      const cm = f.kind === "goal" ? goalMsg(f.uid, f.week) : f.kind === "verdict" ? verdictMsg(f.week) : null;
-      if (cm) { const c = el("div", "coach"); c.append(el("q", null, cm)); t.append(c); }
-      const m = f.kind === "session" ? mediaEl(f.media) : null; if (m) t.append(m);
-      li.append(f.kind === "verdict" ? (() => { const a = el("span", "av s", "€"); a.style.background = "var(--ink)"; a.style.color = "var(--bg)"; return a; })() : avatar(f.uid, true), t, el("span", "when", whenText(f.at)));
-      ul.append(li);
-    });
-    c.append(ul); root.append(c);
-  }
+
 
   // ---- Formulaires d'accueil ----
   $("join-form").addEventListener("submit", async (e) => {
