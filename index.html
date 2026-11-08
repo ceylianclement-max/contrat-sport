@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Contrat Sport</title>
+<meta name="apple-mobile-web-app-title" content="Contrat Sport">
+<meta name="application-name" content="Contrat Sport">
+<meta name="theme-color" content="#ff5a5f">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<script>
+  // Lien de l'app (sur claude.ai). Le #CODE d'invitation est transmis tel quel.
+  var APP = "https://claude.ai/artifact/63MMQX7UpzmW5ix59YRNEB";
+  var q = new URLSearchParams(location.search);
+  // Ouvert depuis l'écran d'accueil (?go=1) : on va directement dans l'app.
+  if (q.get("go") === "1") location.replace(APP + location.hash);
+</script>
+<style>
+  :root { --a: #ff8a3d; --b: #ff5a5f; --c: #ff4f8b; --ink: #2b1b2f; --muted: #8a7480; --bg: #fff4ec; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5;
+    padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); }
+  main { max-width: 460px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  .hero { border-radius: 28px; padding: 26px 22px; color: #fff; background: linear-gradient(140deg, var(--a), var(--b) 55%, var(--c)); display: flex; gap: 16px; align-items: center; box-shadow: 0 14px 34px rgba(255,80,80,.28); }
+  .hero img { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 0 0 3px rgba(255,255,255,.5); flex: none; }
+  h1 { margin: 0; font-size: 1.7rem; line-height: 1.05; letter-spacing: -.02em; }
+  .hero p { margin: 4px 0 0; opacity: .92; }
+  .btn { display: block; text-align: center; text-decoration: none; font-weight: 700; font-size: 1.1rem; padding: 16px; border-radius: 18px; color: #fff; background: linear-gradient(135deg, var(--a), var(--b)); box-shadow: 0 8px 20px rgba(255,90,70,.3); }
+  .card { background: #fff; border-radius: 22px; padding: 18px; box-shadow: 0 8px 24px rgba(160,70,40,.08); }
+  h2 { margin: 0 0 8px; font-size: 1.1rem; }
+  ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--b); font-weight: 800; }
+  .muted { color: var(--muted); font-size: .92rem; margin: 0; }
+  .code { display: inline-block; font-weight: 800; letter-spacing: .15em; color: var(--b); }
+  [hidden] { display: none !important; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #fbeee6; --muted: #b39aa6; --bg: #1a1219; } .card { background: #261a25; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="hero">
+    <img src="icon-180.png" alt="">
+    <div><h1>Contrat Sport</h1><p>3 séances par semaine. Sinon, 5 € pour l'autre.</p></div>
+  </div>
+  <p class="card" id="invite" hidden>Tu es invité dans le groupe <span class="code" id="code"></span>. Tu le rejoindras automatiquement en ouvrant l'app.</p>
+  <a class="btn" id="open" href="https://claude.ai/artifact/63MMQX7UpzmW5ix59YRNEB">Ouvrir l'app</a>
+  <div class="card" id="ios" hidden>
+    <h2>Mettre l'app sur ton écran d'accueil (iPhone)</h2>
+    <ol>
+      <li>Cette page doit être ouverte dans <b>Safari</b>.</li>
+      <li>Touche le bouton <b>Partager</b> (carré avec une flèche).</li>
+      <li>Choisis <b>« Sur l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
+    </ol>
+  </div>
+  <div class="card" id="android" hidden>
+    <h2>Mettre l'app sur ton écran d'accueil (Android)</h2>
+    <ol>
+      <li>Cette page doit être ouverte dans <b>Chrome</b>.</li>
+      <li>Touche le menu <b>⋮</b> en haut à droite.</li>
+      <li>Choisis <b>« Ajouter à l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
+    </ol>
+  </div>
+  <p class="muted">L'app s'ouvre sur claude.ai : connecte-toi une fois avec ton compte dans ce navigateur et reste connecté.</p>
+</main>
+<script>
+  var code = (location.hash || "").slice(1).toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+  if (code.length === 6) { document.getElementById("invite").hidden = false; document.getElementById("code").textContent = code; }
+  document.getElementById("open").href = APP + (code.length === 6 ? "#" + code : "");
+  // L'adresse enregistrée sur l'écran d'accueil ouvrira directement l'app (et gardera le code d'invitation).
+  try { history.replaceState(null, "", "?go=1" + (code.length === 6 ? "#" + code : "")); } catch (e) {}
+  var ua = navigator.userAgent;
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  document.getElementById(isIOS ? "ios" : "android").hidden = false;
+  if (!/Mobi|Android|iPhone|iPad/.test(ua) && !isIOS) { document.getElementById("ios").hidden = false; }
+</script>
+</body>
+</html>
