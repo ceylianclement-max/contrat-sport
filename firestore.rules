@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Chaque groupe est accessible à qui connaît son code. Rien d'autre n'est lisible.
+    match /groups/{code}/{document=**} {
+      allow read, write: if code.size() == 6;
+    }
+  }
+}

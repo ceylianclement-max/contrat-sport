@@ -1,5 +1,6 @@
 # Contrat Sport
 
-Page lanceur de l'app Contrat Sport : icône pour l'écran d'accueil et renvoi vers l'app sur claude.ai.
+App de suivi du contrat sport (3 séances par semaine, sinon 5 €).
 
-Lien à partager : https://ceylianclement-max.github.io/contrat-sport/
+- App : https://ceylianclement-max.github.io/contrat-sport/
+- Données : Firebase Firestore (config dans `config.js`, règles dans `firestore.rules`).

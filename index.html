@@ -4,77 +4,1287 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Contrat Sport</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Contrat Sport">
 <meta name="application-name" content="Contrat Sport">
-<meta name="theme-color" content="#ff5a5f">
+<meta name="theme-color" content="#fff4ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1219" media="(prefers-color-scheme: dark)">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="manifest" href="manifest.webmanifest">
-<script>
-  // Lien de l'app (sur claude.ai). Le #CODE d'invitation est transmis tel quel.
-  var APP = "https://claude.ai/artifact/63MMQX7UpzmW5ix59YRNEB";
-  var q = new URLSearchParams(location.search);
-  // Ouvert depuis l'écran d'accueil (?go=1) : on va directement dans l'app.
-  if (q.get("go") === "1") location.replace(APP + location.hash);
-</script>
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Outfit:wght@400;500;600;700&display=swap">
 <style>
-  :root { --a: #ff8a3d; --b: #ff5a5f; --c: #ff4f8b; --ink: #2b1b2f; --muted: #8a7480; --bg: #fff4ec; }
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5;
-    padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); }
-  main { max-width: 460px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
-  .hero { border-radius: 28px; padding: 26px 22px; color: #fff; background: linear-gradient(140deg, var(--a), var(--b) 55%, var(--c)); display: flex; gap: 16px; align-items: center; box-shadow: 0 14px 34px rgba(255,80,80,.28); }
-  .hero img { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 0 0 3px rgba(255,255,255,.5); flex: none; }
-  h1 { margin: 0; font-size: 1.7rem; line-height: 1.05; letter-spacing: -.02em; }
-  .hero p { margin: 4px 0 0; opacity: .92; }
-  .btn { display: block; text-align: center; text-decoration: none; font-weight: 700; font-size: 1.1rem; padding: 16px; border-radius: 18px; color: #fff; background: linear-gradient(135deg, var(--a), var(--b)); box-shadow: 0 8px 20px rgba(255,90,70,.3); }
-  .card { background: #fff; border-radius: 22px; padding: 18px; box-shadow: 0 8px 24px rgba(160,70,40,.08); }
-  h2 { margin: 0 0 8px; font-size: 1.1rem; }
-  ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
-  li::marker { color: var(--b); font-weight: 800; }
-  .muted { color: var(--muted); font-size: .92rem; margin: 0; }
-  .code { display: inline-block; font-weight: 800; letter-spacing: .15em; color: var(--b); }
-  [hidden] { display: none !important; }
-  @media (prefers-color-scheme: dark) { :root { --ink: #fbeee6; --muted: #b39aa6; --bg: #1a1219; } .card { background: #261a25; } }
+/* Layout: app mobile chaleureuse — carte « coucher de soleil » en tête avec anneaux de progression, cartes douces, tickets à encoches pour l'argent, barre d'onglets flottante. */
+:root {
+  --bg: #fff4ec; --surface: #ffffff; --ink: #2b1b2f; --muted: #8a7480; --line: #f2e2d9;
+  --accent: #ff6a3d; --accent-soft: #ffe7dc; --on-accent: #ffffff;
+  --ok: #ff6a3d; --ok-soft: #ffe7dc; --win: #23a26d; --win-soft: #dcf4e8;
+  --bad: #e23d5b; --bad-soft: #ffe1e7; --joker: #c98a00; --joker-soft: #fff1c9;
+  --hero-a: #ff8a3d; --hero-b: #ff5a5f; --hero-c: #ff4f8b; --hero-ink: #ffffff;
+  --s1: #f0592f; --s2: #7a5cff; --grid: #f3e6de;
+  --shadow: 0 1px 2px rgba(120,50,30,.06), 0 8px 24px rgba(160,70,40,.08);
+  --scrim: rgba(43,27,47,.45);
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --sans: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --nav-h: 66px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1a1219; --surface: #261a25; --ink: #fbeee6; --muted: #b39aa6; --line: #3a2a36;
+  --accent: #ff8257; --accent-soft: #3d2420; --on-accent: #2a120c;
+  --ok: #ff8257; --ok-soft: #3d2420; --win: #4fd197; --win-soft: #16352a;
+  --bad: #ff6f88; --bad-soft: #43202a; --joker: #ffc93d; --joker-soft: #3b3014;
+  --hero-a: #ff7a32; --hero-b: #ef4a5b; --hero-c: #d93c7c; --hero-ink: #ffffff;
+  --s1: #e4552f; --s2: #8a70ff; --grid: #34252f;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.35);
+  --scrim: rgba(0,0,0,.6); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #1a1219; --surface: #261a25; --ink: #fbeee6; --muted: #b39aa6; --line: #3a2a36;
+  --accent: #ff8257; --accent-soft: #3d2420; --on-accent: #2a120c;
+  --ok: #ff8257; --ok-soft: #3d2420; --win: #4fd197; --win-soft: #16352a;
+  --bad: #ff6f88; --bad-soft: #43202a; --joker: #ffc93d; --joker-soft: #3b3014;
+  --hero-a: #ff7a32; --hero-b: #ef4a5b; --hero-c: #d93c7c; --hero-ink: #ffffff;
+  --s1: #e4552f; --s2: #8a70ff; --grid: #34252f;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.35);
+  --scrim: rgba(0,0,0,.6); color-scheme: dark; }
+html, body { min-height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(120% 60% at 100% 0%, var(--accent-soft) 0%, transparent 60%); background-repeat: no-repeat; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; }
+.shell { max-width: 560px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px calc(var(--nav-h) + 40px + env(safe-area-inset-bottom, 0px)); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 4px 16px; }
+.brand { font-family: var(--display); font-weight: 800; font-size: 1.45rem; letter-spacing: -.02em; line-height: 1; display: flex; align-items: center; gap: 8px; }
+.brand::before { content: ""; width: 26px; height: 26px; border-radius: 9px; background: linear-gradient(135deg, var(--hero-a), var(--hero-c)); box-shadow: inset 0 0 0 5px rgba(255,255,255,.35); }
+.brand span { color: var(--accent); }
+.group-btn { display: flex; align-items: center; gap: 8px; min-width: 0; border: 0; background: var(--surface); border-radius: 999px; padding: 5px 12px 5px 5px; box-shadow: var(--shadow); }
+.group-btn .dot { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--hero-a), var(--hero-c)); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: .8rem; flex: none; }
+.group-btn .gname { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 38vw; font-weight: 600; }
+.chev { color: var(--muted); font-size: .75rem; }
+
+.card { background: var(--surface); border-radius: 22px; padding: 18px; box-shadow: var(--shadow); }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+h2 { font-family: var(--display); font-size: 1.35rem; font-weight: 700; margin: 0; letter-spacing: -.02em; text-wrap: balance; line-height: 1.15; }
+h3 { font-family: var(--display); font-size: 1.05rem; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+.sub { color: var(--muted); font-size: .92rem; margin: 0; }
+.label { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+.row { display: flex; gap: 8px; align-items: center; }
+.row > input { flex: 1; min-width: 0; }
+.between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+input[type="text"], textarea { border: 1.5px solid var(--line); background: var(--bg); border-radius: 14px; padding: 11px 14px; outline: none; }
+textarea { resize: vertical; min-height: 64px; width: 100%; box-sizing: border-box; }
+input[type="text"]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.btn { border: 0; border-radius: 14px; padding: 11px 18px; font-weight: 600; background: var(--accent); color: var(--on-accent); white-space: nowrap; transition: transform .12s ease, filter .12s ease; }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.ghost { background: var(--bg); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn.quiet { background: transparent; color: var(--muted); padding-inline: 8px; }
+.btn.small { padding: 7px 12px; font-size: .86rem; border-radius: 11px; }
+.btn.danger { background: transparent; color: var(--bad); padding-inline: 0; }
+.btn.joker { background: var(--joker-soft); color: var(--joker); }
+.btn.big { padding: 16px 20px; font-family: var(--display); font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; border-radius: 18px; width: 100%;
+  background: linear-gradient(135deg, var(--hero-a), var(--hero-b)); color: #fff; box-shadow: 0 8px 20px rgba(255,90,70,.3); }
+.err { color: var(--bad); font-size: .86rem; min-height: 1.2em; margin: 0; }
+.notice { font-size: .92rem; color: var(--muted); text-align: center; margin: 0; }
+.code-input { letter-spacing: .2em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+
+/* Carte du haut */
+.hero { position: relative; overflow: hidden; border-radius: 28px; padding: 22px 20px 20px; color: var(--hero-ink);
+  background: linear-gradient(140deg, var(--hero-a) 0%, var(--hero-b) 55%, var(--hero-c) 100%);
+  box-shadow: 0 14px 34px rgba(255,80,80,.28); display: flex; flex-direction: column; gap: 16px; }
+.hero::before { content: ""; position: absolute; width: 240px; height: 240px; right: -70px; top: -90px; border-radius: 50%; background: rgba(255,255,255,.14); }
+.hero::after { content: ""; position: absolute; width: 160px; height: 160px; left: -60px; bottom: -80px; border-radius: 50%; background: rgba(255,255,255,.1); }
+.hero > * { position: relative; z-index: 1; }
+.hero-top { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+.hero-eyebrow { font-size: .85rem; font-weight: 500; opacity: .92; }
+.hero-title { font-family: var(--display); font-weight: 800; font-size: 1.7rem; line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; margin-top: 4px; }
+.ring { display: block; }
+.ring .trk { stroke: rgba(255,255,255,.28); }
+.ring .arc { stroke: #fff; transition: stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1); }
+.ring text { fill: #fff; font-family: var(--display); font-weight: 800; }
+.hero-vs { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.17); border-radius: 16px; padding: 9px 12px; font-weight: 500; }
+.hero-vs .av { box-shadow: 0 0 0 2px rgba(255,255,255,.7); }
+.hero-vs > span:nth-child(2) { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hero .btn.big { background: #fff; color: var(--hero-b); box-shadow: 0 6px 16px rgba(80,10,20,.18); }
+.hero .done-note { background: rgba(255,255,255,.17); border-radius: 16px; padding: 12px 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.hero .done-note svg { width: 22px; height: 22px; flex: none; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Semaine */
+.weekbar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; }
+.weekbar .mid { text-align: center; min-width: 0; }
+.wk-num { font-family: var(--display); font-weight: 800; font-size: 1.5rem; line-height: 1.05; letter-spacing: -.02em; }
+.wk-range { color: var(--muted); font-size: .9rem; }
+.nav-btn { width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--surface); box-shadow: var(--shadow); font-size: 1.2rem; display: grid; place-items: center; color: var(--ink); }
+.nav-btn:disabled { opacity: .35; }
+.alert { border-radius: 20px; padding: 14px 16px; background: var(--surface); box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 4px; font-size: .94rem; border-left: 0; position: relative; }
+.alert::before { content: ""; position: absolute; top: 16px; right: 16px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px var(--accent-soft); }
+.alert strong { font-family: var(--display); font-weight: 700; }
+.p-card { display: flex; flex-direction: column; gap: 14px; }
+.p-head { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; }
+.av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #fff; flex: none; font-family: var(--display); }
+.av.s { width: 30px; height: 30px; font-size: .8rem; }
+.p-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: 1.02rem; }
+.p-name em { font-style: normal; color: var(--muted); font-weight: 400; font-size: .85em; }
+.score { font-family: var(--display); font-weight: 800; font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+.score small { font-size: 1rem; color: var(--muted); font-weight: 600; }
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day { aspect-ratio: 1 / 1.3; max-width: 100%; border-radius: 16px; border: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0; color: var(--muted); position: relative; transition: transform .15s ease; }
+.day:not(:disabled):active { transform: scale(.92); }
+.day b { font-family: var(--display); font-size: 1.1rem; color: var(--ink); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.day span { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+.day .ck { width: 60%; max-width: 26px; aspect-ratio: 1; stroke: #fff; fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.day .ck path { stroke-dasharray: 24; stroke-dashoffset: 0; }
+.day.done { background: linear-gradient(160deg, var(--hero-a), var(--hero-b)); color: rgba(255,255,255,.85); box-shadow: 0 6px 14px rgba(255,90,70,.28); }
+.day.done b { color: #fff; }
+.day.today:not(.done) { background: var(--surface); box-shadow: inset 0 0 0 2px var(--accent); color: var(--accent); }
+.day.today:not(.done) b { color: var(--accent); }
+.day.future { opacity: .45; cursor: default; }
+.day.ro { cursor: default; }
+.day.done.ro { cursor: pointer; }
+.day .pic { position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+.day.pop { animation: pop .55s cubic-bezier(.2,1.6,.4,1); }
+.day.pop .ck path { animation: draw .5s .12s ease-out both; }
+@keyframes pop { 0% { transform: scale(.6); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+.meter { height: 8px; border-radius: 999px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.meter i { display: block; background: var(--bg); border-radius: 999px; }
+.meter i.on { background: linear-gradient(90deg, var(--hero-a), var(--hero-b)); }
+.pill { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em; padding: 3px 10px; border-radius: 999px; white-space: nowrap; margin-top: 2px; }
+.pill.ok { background: var(--win-soft); color: var(--win); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.joker { background: var(--joker-soft); color: var(--joker); }
+.pill.wait { background: var(--bg); color: var(--muted); }
+
+/* Tickets à encoches (argent) */
+.ticket { --notch: 13px; position: relative; background: var(--surface); border-radius: 22px; padding: 18px 20px; box-shadow: var(--shadow);
+  -webkit-mask: radial-gradient(circle var(--notch) at 0 var(--cut, 50%), #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle var(--notch) at 100% var(--cut, 50%), #0000 98%, #000) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle var(--notch) at 0 var(--cut, 50%), #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle var(--notch) at 100% var(--cut, 50%), #0000 98%, #000) right / 51% 100% no-repeat;
+  display: flex; flex-direction: column; gap: 8px; }
+.ticket .tear { border-top: 2px dashed var(--line); margin-inline: 4px; }
+.verdict { border-radius: 22px; }
+.verdict.bad { background: var(--bad-soft); }
+.verdict.ok { background: var(--win-soft); }
+.verdict.bad .tear { border-color: rgba(226,61,91,.25); }
+.verdict.ok .tear { border-color: rgba(35,162,109,.25); }
+.verdict .big { font-family: var(--display); font-size: 1.35rem; font-weight: 800; line-height: 1.15; letter-spacing: -.02em; }
+
+/* Calendrier */
+.yr-tabs { display: flex; gap: 4px; background: var(--surface); padding: 4px; border-radius: 999px; box-shadow: var(--shadow); }
+.yr-tabs button { border: 0; background: transparent; border-radius: 999px; padding: 6px 14px; font-weight: 600; color: var(--muted); }
+.yr-tabs button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.month h3 { text-transform: capitalize; }
+.wk-list { list-style: none; margin: 0; padding: 0; }
+.wk-row { display: grid; grid-template-columns: 3em 1fr auto; gap: 10px; align-items: center; padding: 9px 8px; width: 100%; background: transparent; border: 0; text-align: left; border-radius: 12px; }
+.wk-list li + li .wk-row { border-top: 1px solid var(--line); border-radius: 0; }
+.wk-row.cur, .wk-list li + li .wk-row.cur { background: var(--accent-soft); border-radius: 12px; border-top-color: transparent; }
+.wk-row .n { font-family: var(--display); font-weight: 700; font-variant-numeric: tabular-nums; }
+.wk-row .r { color: var(--muted); font-size: .86rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.badges { display: flex; gap: 5px; }
+.bdg { min-width: 26px; height: 24px; border-radius: 8px; display: grid; place-items: center; font-size: .78rem; font-weight: 700; font-variant-numeric: tabular-nums; padding-inline: 4px; background: var(--bg); color: var(--muted); }
+.bdg.ok { background: var(--win); color: #fff; }
+.bdg.bad { background: var(--bad); color: #fff; }
+.bdg.joker { background: var(--joker); color: #fff; }
+.bdg.run { background: var(--accent-soft); color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: .84rem; color: var(--muted); align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .bdg { min-width: 16px; height: 14px; border-radius: 5px; }
+
+/* Comptes */
+.balance { font-family: var(--display); font-weight: 800; font-size: 2rem; line-height: 1.08; letter-spacing: -.03em; text-wrap: balance; }
+.list { list-style: none; margin: 0; padding: 0; }
+.list > li { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 11px 0; border-top: 1px solid var(--line); }
+.list > li:first-child { border-top: 0; }
+.list > li.empty { display: block; color: var(--muted); font-size: .92rem; }
+.list .t { min-width: 0; }
+.list .t small { display: block; color: var(--muted); font-size: .84rem; }
+.amt { font-family: var(--display); font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; color: var(--accent); }
+.rules { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 8px; font-size: .94rem; }
+.rules li::marker { color: var(--accent); font-family: var(--display); font-weight: 800; }
+
+/* Fil */
+.feed li { grid-template-columns: 30px 1fr auto; align-items: start; }
+.feed .when { color: var(--muted); font-size: .78rem; white-space: nowrap; padding-top: 3px; }
+.feed li.new .t > span:first-child { font-weight: 600; }
+.feed li.new .when { color: var(--accent); font-weight: 600; }
+.feed .media { margin-top: 8px; max-height: 220px; }
+
+.media { display: block; width: 100%; max-height: 300px; object-fit: cover; border-radius: 16px; background: var(--bg); }
+.media-miss { font-size: .84rem; color: var(--muted); background: var(--bg); border-radius: 14px; padding: 10px 12px; }
+.file-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.file-row input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.file-row label { cursor: pointer; }
+.file-name { font-size: .86rem; color: var(--muted); min-width: 0; overflow-wrap: anywhere; }
+
+/* Barre d'onglets flottante */
+.tabs { position: fixed; z-index: 5; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); pointer-events: none; }
+.tabs .inner { pointer-events: auto; max-width: 536px; margin: 0 auto; height: var(--nav-h); display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 6px;
+  box-sizing: border-box; background: var(--surface); border-radius: 24px; box-shadow: 0 10px 30px rgba(90,30,30,.16), 0 0 0 1px var(--line); }
+.tab { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--muted); font-size: .72rem; font-weight: 600; position: relative; border-radius: 18px; transition: background .2s ease, color .2s ease; }
+.tab svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.tab[aria-selected="true"] { color: var(--accent); background: var(--accent-soft); }
+.tab .badge { position: absolute; top: 4px; left: calc(50% + 7px); min-width: 17px; height: 17px; border-radius: 999px; background: var(--bad); color: #fff; font-size: .65rem; display: grid; place-items: center; padding-inline: 3px; box-shadow: 0 0 0 2px var(--surface); }
+
+.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+.sheet { background: var(--surface); width: 100%; max-width: 560px; border-radius: 28px 28px 0 0; max-height: 88vh; overflow-y: auto; box-sizing: border-box;
+  padding-block: 12px calc(24px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 16px; animation: up .28s cubic-bezier(.2,.9,.3,1); }
+.sheet::before { content: ""; align-self: center; width: 40px; height: 5px; border-radius: 999px; background: var(--line); flex: none; }
+@keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.codebox { background: var(--bg); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.code { font-family: var(--display); font-weight: 800; font-size: 2.2rem; letter-spacing: .22em; padding-left: .22em; user-select: all; -webkit-user-select: all; color: var(--accent); }
+.codebox .row { flex-wrap: wrap; justify-content: center; }
+.link-out { font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; text-align: center; user-select: all; -webkit-user-select: all; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + 26px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 16px; font-size: .92rem; font-weight: 500; z-index: 30; max-width: calc(100% - 32px); box-sizing: border-box; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+.onboard-hero { padding-block: 10px 4px; }
+.onboard-hero h2 { font-size: 2.1rem; font-weight: 800; letter-spacing: -.035em; line-height: 1.02; }
+.onboard-hero h2 em { font-style: normal; background: linear-gradient(120deg, var(--hero-a), var(--hero-c)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Évolution */
+.chart-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .88rem; font-weight: 500; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.chart-legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+.chart-legend .goal-key { color: var(--muted); }
+.chart-legend .goal-key i { height: 0; width: 16px; border-top: 2px dashed var(--accent); border-radius: 0; }
+.chart-wrap { position: relative; }
+.chart-scroll { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.chart-scroll svg { display: block; }
+.chart-scroll text { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
+.chart-scroll text.cur { fill: var(--ink); font-weight: 700; }
+.chart-scroll .hit { fill: transparent; cursor: pointer; }
+.chart-scroll .hit:hover, .chart-scroll .hit.on { fill: var(--accent-soft); opacity: .55; }
+.ytick { position: absolute; left: 0; font-size: 11px; color: var(--muted); transform: translateY(-50%); background: var(--surface); padding-right: 4px; font-variant-numeric: tabular-nums; }
+.tip { position: absolute; top: 0; z-index: 3; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 8px 11px; font-size: .84rem; pointer-events: none; min-width: 150px; box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+.tip b { display: block; font-family: var(--display); margin-bottom: 2px; }
+.tip span { display: flex; align-items: center; gap: 6px; }
+.tip i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; flex: none; }
+.duel { display: grid; grid-template-columns: 1fr repeat(var(--cols, 2), minmax(0, 76px)); gap: 0; font-size: .92rem; }
+.duel > * { padding: 9px 0; border-top: 1px solid var(--line); }
+.duel > .h { border-top: 0; padding-top: 0; display: flex; justify-content: center; }
+.duel > .v { text-align: center; font-family: var(--display); font-weight: 800; font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.duel > .v.lead { color: var(--accent); }
+.duel > .k { color: var(--muted); }
+details.tbl summary { cursor: pointer; color: var(--muted); font-size: .88rem; font-weight: 500; }
+details.tbl table { width: 100%; border-collapse: collapse; font-size: .86rem; margin-top: 8px; font-variant-numeric: tabular-nums; }
+details.tbl th, details.tbl td { padding: 5px 4px; text-align: left; border-bottom: 1px solid var(--line); }
+details.tbl .tw { overflow-x: auto; }
+/* Messages du coach */
+.coach { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; }
+.coach::before { content: "C"; flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: .72rem; color: #fff; background: linear-gradient(135deg, var(--hero-a), var(--hero-c)); margin-top: 1px; }
+.coach q { quotes: "« " " »"; font-style: italic; }
+.coach-bubble { background: rgba(255,255,255,.2); border-radius: 16px 16px 16px 4px; padding: 10px 13px; font-weight: 500; font-size: .95rem; }
+.coach-bubble small { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; opacity: .85; font-weight: 600; }
+.feed .coach { margin-top: 6px; color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
+
 </head>
 <body>
-<main>
-  <div class="hero">
-    <img src="icon-180.png" alt="">
-    <div><h1>Contrat Sport</h1><p>3 séances par semaine. Sinon, 5 € pour l'autre.</p></div>
+<div class="shell">
+  <header class="top">
+    <div class="brand">Contrat<span>Sport</span></div>
+    <button class="group-btn" id="group-btn" type="button" hidden>
+      <span class="dot" id="group-dot">G</span><span class="gname" id="group-name">Groupe</span><span class="chev">▾</span>
+    </button>
+  </header>
+
+  <main id="view-onboard" class="stack">
+    <div class="stack onboard-hero" style="gap:8px">
+      <h2>3 séances par semaine. <em>Sinon, 5 € pour l'autre.</em></h2>
+      <p class="sub">Chacun coche les jours où il est allé au sport. Le dimanche soir, l'app fait les comptes et dit qui paie qui.</p>
+    </div>
+    <div class="card stack" id="invite-card" hidden>
+      <h2>Tu es invité !</h2>
+      <p class="sub" id="invite-msg"></p>
+    </div>
+    <div class="card stack">
+      <div><h2>Ton prénom</h2><p class="sub">C'est comme ça que ton binôme te verra. Aucun compte à créer.</p></div>
+      <input type="text" id="my-name" maxlength="24" placeholder="Ex : Manu" autocomplete="given-name" aria-label="Ton prénom">
+    </div>
+    <div class="card stack">
+      <div><h2>Rejoindre un groupe</h2><p class="sub">Entre le code à 6 caractères reçu de ton binôme.</p></div>
+      <form class="row" id="join-form">
+        <input type="text" id="join-code" class="code-input" maxlength="6" placeholder="EX : K7P2QX" autocomplete="off" autocapitalize="characters" aria-label="Code du groupe">
+        <button class="btn" type="submit" id="join-btn">Rejoindre</button>
+      </form>
+      <p class="err" id="join-err"></p>
+    </div>
+    <div class="card stack">
+      <div><h2>Créer un groupe</h2><p class="sub">Tu recevras un code à envoyer à ton binôme.</p></div>
+      <form class="row" id="create-form">
+        <input type="text" id="create-name" maxlength="40" placeholder="Ex : Ceylian & Manu" autocomplete="off" aria-label="Nom du groupe">
+        <button class="btn" type="submit" id="create-btn">Créer</button>
+      </form>
+      <p class="err" id="create-err"></p>
+    </div>
+    <p class="notice" id="boot-note">Connexion…</p>
+  </main>
+
+  <main id="view-semaine" class="stack" hidden></main>
+  <main id="view-calendrier" class="stack" hidden></main>
+  <main id="view-comptes" class="stack" hidden></main>
+  <main id="view-fil" class="stack" hidden></main>
+</div>
+
+<nav class="tabs" id="tabs" hidden>
+  <div class="inner" role="tablist">
+    <button class="tab" role="tab" data-tab="semaine" aria-selected="true" type="button">
+      <svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>Semaine</button>
+    <button class="tab" role="tab" data-tab="calendrier" aria-selected="false" type="button">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5h16M6.5 16V11M11 16V6.5M15.5 16v-6M20 16V8"/></svg>Évolution</button>
+    <button class="tab" role="tab" data-tab="comptes" aria-selected="false" type="button">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M15 8.8a3.6 3.6 0 1 0 0 6.4M7.5 11h6M7.5 13.5h6"/></svg>Comptes</button>
+    <button class="tab" role="tab" data-tab="fil" aria-selected="false" type="button">
+      <svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></svg>Fil<span class="badge" id="fil-badge" hidden></span></button>
   </div>
-  <p class="card" id="invite" hidden>Tu es invité dans le groupe <span class="code" id="code"></span>. Tu le rejoindras automatiquement en ouvrant l'app.</p>
-  <a class="btn" id="open" href="https://claude.ai/artifact/63MMQX7UpzmW5ix59YRNEB">Ouvrir l'app</a>
-  <div class="card" id="ios" hidden>
-    <h2>Mettre l'app sur ton écran d'accueil (iPhone)</h2>
-    <ol>
-      <li>Cette page doit être ouverte dans <b>Safari</b>.</li>
-      <li>Touche le bouton <b>Partager</b> (carré avec une flèche).</li>
-      <li>Choisis <b>« Sur l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
-    </ol>
-  </div>
-  <div class="card" id="android" hidden>
-    <h2>Mettre l'app sur ton écran d'accueil (Android)</h2>
-    <ol>
-      <li>Cette page doit être ouverte dans <b>Chrome</b>.</li>
-      <li>Touche le menu <b>⋮</b> en haut à droite.</li>
-      <li>Choisis <b>« Ajouter à l'écran d'accueil »</b>, puis <b>Ajouter</b>.</li>
-    </ol>
-  </div>
-  <p class="muted">L'app s'ouvre sur claude.ai : connecte-toi une fois avec ton compte dans ce navigateur et reste connecté.</p>
-</main>
+</nav>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" id="sheet"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<canvas id="confetti" hidden></canvas>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
 <script>
-  var code = (location.hash || "").slice(1).toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
-  if (code.length === 6) { document.getElementById("invite").hidden = false; document.getElementById("code").textContent = code; }
-  document.getElementById("open").href = APP + (code.length === 6 ? "#" + code : "");
-  // L'adresse enregistrée sur l'écran d'accueil ouvrira directement l'app (et gardera le code d'invitation).
-  try { history.replaceState(null, "", "?go=1" + (code.length === 6 ? "#" + code : "")); } catch (e) {}
-  var ua = navigator.userAgent;
-  var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  document.getElementById(isIOS ? "ios" : "android").hidden = false;
-  if (!/Mobi|Android|iPhone|iPad/.test(ua) && !isIOS) { document.getElementById("ios").hidden = false; }
+(() => {
+  const ARTIFACT_URL = "https://claude.ai/artifact/63MMQX7UpzmW5ix59YRNEB";
+  const TZ = "Europe/Brussels", GOAL = 3, FINE = 5, YEARS = [2026, 2027];
+  const MAX_UPLOAD = 20 * 1024 * 1024;
+  const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const COLORS = ["#ff6a3d", "#7a5cff", "#e23d5b", "#14a38b", "#c98a00", "#3a86ff", "#d94fa0", "#5b6b7f"];
+  const LETTERS = ["L", "M", "M", "J", "V", "S", "D"];
+  const SVGNS = "http://www.w3.org/2000/svg";
+  // Messages du coach, choisis automatiquement (toujours le même pour une personne et une semaine)
+  const GOAL_MSGS = [
+    "3 sur 3. Le canapé a porté plainte pour abandon de poste.",
+    "Semaine pliée. Les haltères commencent à reconnaître {n}.",
+    "Objectif atteint : les 5 € restent bien au chaud dans la poche de {n}.",
+    "Trois séances, zéro excuse. Respect.",
+    "Validé ! Le miroir de la salle dit merci à {n}.",
+    "Mission accomplie. {n} peut manger sa pizza la tête haute.",
+    "Check, check, check. Rien à redire.",
+    "Les courbatures, c'est le prix de la gloire. {n} a payé, mais pas 5 €.",
+    "Ça, c'est ce qu'on appelle tenir un contrat.",
+    "Trois fois cette semaine. {n} devient une légende de la salle.",
+    "Le portefeuille de {n} vous remercie pour votre attention.",
+    "{n} a validé. L'autre a intérêt à se bouger.",
+    "Semaine dans la poche. Prochaine étape : les abdos visibles.",
+    "{n} ne négocie pas avec la flemme.",
+    "Le contrat est respecté. Le notaire est ravi.",
+    "Trois séances : la salle songe à donner une carte VIP à {n}."
+  ];
+  const EARLY_MSGS = ["Et en plus avant vendredi. Efficace.", "Bouclé en avance : le week-end est libre.", "Pas de rush du dimanche cette fois."];
+  const FAIL_MSGS = [
+    "{n} sort le porte-monnaie et range sa fierté.",
+    "5 € et une session d'insultes amicales. Le contrat est clair.",
+    "La flemme a gagné cette manche contre {n}. Revanche lundi.",
+    "{n} vient de sponsoriser le prochain café de l'autre."
+  ];
+  const BOTH_FAIL_MSGS = ["Match nul dans la flemme. Personne ne paie, tout le monde se fait chambrer.", "Deux sur le canapé. On repart à zéro lundi, promis."];
+  const ALL_OK_MSGS = ["Les deux ont validé. Duo en béton.", "Personne ne paie. C'est ça, l'esprit d'équipe.", "Semaine parfaite pour le groupe. Le coach verse une larme."];
+  const firstName = (id) => (nameOf(id) || "").split(" ")[0];
+  const pickMsg = (arr, seed, id) => arr[hash(seed) % arr.length].replace(/\{n\}/g, firstName(id));
+  function streakOf(uid, uptoWeek) {
+    let k = 0, w = uptoWeek;
+    while (w >= startWeek() && result(uid, w) === "ok") { k++; w = addDays(w, -7); }
+    return k;
+  }
+  function goalMsg(uid, w) {
+    let m = pickMsg(GOAL_MSGS, uid + w, uid);
+    const st = streakOf(uid, w);
+    if (st >= 2) m += ` ${st} semaines validées d'affilée !`;
+    else {
+      let third = null, c = 0;
+      for (let i = 0; i < 7; i++) if (sessionOf(uid, addDays(w, i)) && ++c === GOAL) { third = i; break; }
+      if (third != null && third <= 3) m += " " + pickMsg(EARLY_MSGS, w + uid + "e", uid);
+    }
+    return m;
+  }
+  function verdictMsg(w) {
+    const v = verdict(w); if (!v) return null;
+    if (v.cancelled) return pickMsg(BOTH_FAIL_MSGS, w, null);
+    if (!v.fails.length) return pickMsg(ALL_OK_MSGS, w, null);
+    return pickMsg(FAIL_MSGS, w + v.fails[0], v.fails[0]);
+  }
+  let justLogged = null;
+  const DAYNAMES = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+  // ---- Dates (clés AAAA-MM-JJ, calculées en UTC pour éviter les décalages) ----
+  const fmtToday = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" });
+  const todayKey = () => fmtToday.format(new Date());
+  const kd = (k) => new Date(k + "T00:00:00Z");
+  const keyOf = (d) => d.toISOString().slice(0, 10);
+  const addDays = (k, n) => { const d = kd(k); d.setUTCDate(d.getUTCDate() + n); return keyOf(d); };
+  const mondayOf = (k) => addDays(k, -((kd(k).getUTCDay() + 6) % 7));
+  const thursday = (wk) => addDays(wk, 3);
+  const monthOfWeek = (wk) => thursday(wk).slice(0, 7);
+  function isoWeek(wk) {
+    const t = kd(thursday(wk)); const y = t.getUTCFullYear();
+    const firstThu = kd(thursday(mondayOf(y + "-01-04")));
+    return 1 + Math.round((t - firstThu) / (7 * 864e5));
+  }
+  const fShort = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "UTC" });
+  const fLong = new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
+  const fMonth = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric", timeZone: "UTC" });
+  const short = (k) => fShort.format(kd(k));
+  const rangeLabel = (wk) => `${short(wk)} – ${short(addDays(wk, 6))}`;
+  const weekLabel = (wk) => `S${isoWeek(wk)} (${rangeLabel(wk)})`;
+  const prevMonth = (m) => { const [y, mo] = m.split("-").map(Number); const d = new Date(Date.UTC(y, mo - 2, 1)); return keyOf(d).slice(0, 7); };
+  const weekOver = (wk) => todayKey() > addDays(wk, 6);
+  const whenText = (t) => {
+    const d = new Date(t), k = fmtToday.format(d), hm = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
+    if (k === todayKey()) return hm;
+    if (k === addDays(todayKey(), -1)) return "hier " + hm;
+    return short(k);
+  };
+
+  function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  const colorFor = (id) => { const i = seriesIds().indexOf(id); return i === 0 ? "var(--s1)" : i === 1 ? "var(--s2)" : COLORS[hash(id || "x") % COLORS.length]; };
+  // Ordre fixe des séries : par date d'arrivée dans le groupe, identique pour tout le monde
+  const seriesIds = () => Object.keys(members).sort((a, b) => (members[a].joinedAt || 0) - (members[b].joinedAt || 0));
+  const nameOf = (id) => names[id] || "Ton binôme";
+  const initial = (n) => (n || "?").trim().charAt(0).toUpperCase() || "?";
+  function avatar(id, small) { const a = el("span", "av" + (small ? " s" : ""), initial(nameOf(id))); a.style.background = colorFor(id); return a; }
+  function toast(t, ms = 2600) { const x = $("toast"); x.textContent = t; x.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (x.hidden = true), ms); }
+  async function copy(text, okMsg, fallbackEl) {
+    try { await navigator.clipboard.writeText(text); toast(okMsg); }
+    catch (_) { if (fallbackEl) { const r = document.createRange(); r.selectNodeContents(fallbackEl); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } toast("Texte sélectionné : copie-le avec ton clavier"); }
+  }
+  // Bouton à double appui (les boîtes confirm() ne s'affichent pas ici)
+  function confirmBtn(btn, label, action) {
+    let armed = false, t;
+    btn.onclick = async () => {
+      if (!armed) { armed = true; const old = btn.textContent; btn.textContent = label; t = setTimeout(() => { armed = false; btn.textContent = old; }, 4000); return; }
+      clearTimeout(t); btn.disabled = true;
+      try { await action(); } catch (_) { toast("Action impossible. Réessaie."); btn.disabled = false; }
+    };
+  }
+
+  // ---- État ----
+  let db = null, assets = true, myId = null, canWrite = true, myIds = {};
+  try { myIds = JSON.parse(localStorage.getItem("cs-ids") || "{}") || {}; } catch (_) {}
+  const saveIds = () => { try { localStorage.setItem("cs-ids", JSON.stringify(myIds)); } catch (_) {} };
+  const APP_URL = "https://ceylianclement-max.github.io/contrat-sport/";
+  let myGroups = [], cur = null, group = {}, groupNames = {};
+  let members = {}, sessions = {}, jokers = {}, payments = {}, feed = [], names = {}, unsubs = [];
+  let view = "semaine", wk = mondayOf(todayKey()), calYear = Math.min(Math.max(+todayKey().slice(0, 4), YEARS[0]), YEARS[YEARS.length - 1]);
+  let lastSeen = 0, feedLoaded = false, filPrevSeen = 0;
+
+  const memberIds = () => Object.keys(members).sort((a, b) => (a === myId ? -1 : b === myId ? 1 : (members[a].joinedAt || 0) - (members[b].joinedAt || 0)));
+  const startWeek = () => mondayOf(group.startWeek || (group.createdAt ? fmtToday.format(new Date(group.createdAt)) : todayKey()));
+
+  // ---- Règles du contrat ----
+  const sessionOf = (uid, day) => sessions[uid + "_" + day] || null;
+  function countWeek(uid, w) { let n = 0; for (let i = 0; i < 7; i++) if (sessionOf(uid, addDays(w, i))) n++; return n; }
+  const jokerOf = (uid, w) => jokers[uid + "_" + w] || null;
+  // Joker : 1 par mois ; utilisé un mois donné = pas de joker le mois suivant.
+  function jokerStatus(uid, w) {
+    if (jokerOf(uid, w)) return { s: "active" };
+    const m = monthOfWeek(w), pm = prevMonth(m);
+    for (const j of Object.values(jokers)) {
+      if (j.uid !== uid) continue;
+      const jm = monthOfWeek(j.week);
+      if (jm === m) return { s: "used", week: j.week };
+      if (jm === pm) return { s: "blocked", week: j.week };
+    }
+    return { s: "free" };
+  }
+  // ok | joker | fail | running | future | before
+  function result(uid, w) {
+    if (w < startWeek()) return "before";
+    if (w > mondayOf(todayKey())) return "future";
+    if (countWeek(uid, w) >= GOAL) return "ok";
+    if (jokerOf(uid, w)) return "joker";
+    return weekOver(w) ? "fail" : "running";
+  }
+  // Qui paie qui pour une semaine terminée
+  function verdict(w) {
+    const ids = memberIds();
+    if (!weekOver(w) || w < startWeek() || ids.length < 2) return null;
+    const res = {}; ids.forEach((id) => (res[id] = result(id, w)));
+    const fails = ids.filter((id) => res[id] === "fail");
+    const others = ids.filter((id) => res[id] !== "fail");
+    const debts = [];
+    if (fails.length && others.length) for (const f of fails) for (const o of others) debts.push({ from: f, to: o, amount: FINE, id: `${w}_${f}_${o}` });
+    return { res, fails, others, debts, cancelled: fails.length > 0 && others.length === 0 };
+  }
+  function finishedWeeks() {
+    const out = []; let w = startWeek();
+    while (weekOver(w)) { out.push(w); w = addDays(w, 7); }
+    return out;
+  }
+
+  // ---- Vues ----
+  function show(v) {
+    for (const x of ["onboard", "semaine", "calendrier", "comptes", "fil"]) $("view-" + x).hidden = x !== v;
+    const inGroup = v !== "onboard";
+    $("tabs").hidden = !inGroup; $("group-btn").hidden = !inGroup;
+    document.querySelectorAll(".tab").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === v)));
+  }
+  function setView(v) {
+    view = v; show(v); render();
+    if (v === "fil") { filPrevSeen = lastSeen; markSeen(); render(); }
+    try { localStorage.setItem("cs-view", v); } catch (_) {}
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => setView(b.dataset.tab)));
+
+  async function saveMyState() {
+    const body = { groups: myGroups, current: cur };
+    try { localStorage.setItem("cs-state", JSON.stringify(body)); } catch (_) {}
+  }
+  function newCode() { let c = ""; for (const n of crypto.getRandomValues(new Uint32Array(6))) c += ALPHABET[n % ALPHABET.length]; return c; }
+  const cleanCode = (s) => (s || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+
+  async function createGroup(name) {
+    let code = newCode();
+    for (let i = 0; i < 5; i++) { const s = await db.doc("groups/" + code).get(); if (!s.exists) break; code = newCode(); }
+    await db.doc("groups/" + code).set({ name, code, createdAt: Date.now(), startWeek: mondayOf(todayKey()) });
+    await joinGroup(code, true);
+  }
+  const myName = () => { const n = ($("my-name").value || "").trim().slice(0, 24); try { if (n) localStorage.setItem("cs-name", n); } catch (_) {} return n; };
+  function newId() { let c = "m"; for (const n of crypto.getRandomValues(new Uint32Array(12))) c += ALPHABET[n % ALPHABET.length].toLowerCase(); return c; }
+  async function joinGroup(code) {
+    const s = await db.doc("groups/" + code).get();
+    if (!s.exists) throw new Error("notfound");
+    const me = myName();
+    let id = myIds[code];
+    if (!id) {
+      // Même prénom qu'un membre existant : c'est la même personne sur un autre téléphone
+      const ms = await db.collection(`groups/${code}/members`).get();
+      const norm = (x) => (x || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const found = ms.docs.find((d) => norm((d.data() || {}).name) === norm(me));
+      id = found ? found.id : newId();
+      myIds[code] = id; saveIds();
+    }
+    myId = id;
+    const m = await db.doc(`groups/${code}/members/${myId}`).get();
+    if (!m.exists) {
+      await db.doc(`groups/${code}/members/${myId}`).set({ joinedAt: Date.now(), name: me });
+      try { await db.doc(`groups/${code}/feed/join_${myId}`).set({ kind: "join", uid: myId, at: Date.now() }); } catch (_) {}
+    }
+    if (!myGroups.includes(code)) myGroups.push(code);
+    groupNames[code] = (s.data() || {}).name || code;
+    await openGroup(code);
+    if (location.hash) { try { history.replaceState(null, "", location.pathname + location.search); } catch (_) {} }
+  }
+  async function leaveGroup() {
+    const code = cur; if (!code) return;
+    try { await db.doc(`groups/${code}/members/${myId}`).delete(); } catch (_) {}
+    myGroups = myGroups.filter((c) => c !== code);
+    delete myIds[code]; saveIds();
+    closeSheet();
+    if (myGroups.length) await openGroup(myGroups[0]); else { closeGroup(); cur = null; saveMyState(); show("onboard"); }
+  }
+  function closeGroup() { unsubs.forEach((u) => { try { u(); } catch (_) {} }); unsubs = []; }
+
+  async function openGroup(code) {
+    closeGroup();
+    if (!myIds[code]) throw new Error("noid");
+    myId = myIds[code];
+    cur = code; group = {}; members = {}; sessions = {}; jokers = {}; payments = {}; feed = []; feedLoaded = false;
+    try { lastSeen = +localStorage.getItem("cs-seen-" + code) || 0; } catch (_) { lastSeen = 0; }
+    saveMyState();
+    const base = "groups/" + code, err = () => {};
+    const toMap = (q) => { const o = {}; q.docs.forEach((d) => (o[d.id] = Object.assign({ id: d.id }, d.data()))); return o; };
+    unsubs.push(db.doc(base).onSnapshot((s) => { group = s.data() || {}; groupNames[code] = group.name || code; renderHeader(); render(); }, err));
+    unsubs.push(db.collection(base + "/members").onSnapshot((q) => { members = toMap(q); Object.keys(members).forEach((id) => (names[id] = members[id].name || "")); render(); writeVerdictNote(); }, err));
+    unsubs.push(db.collection(base + "/sessions").onSnapshot((q) => { sessions = toMap(q); render(); writeVerdictNote(); }, err));
+    unsubs.push(db.collection(base + "/jokers").onSnapshot((q) => { jokers = toMap(q); render(); }, err));
+    unsubs.push(db.collection(base + "/payments").onSnapshot((q) => { payments = toMap(q); render(); }, err));
+    unsubs.push(db.collection(base + "/feed").orderBy("at", "desc").limit(120).onSnapshot((q) => {
+      const prev = new Set(feed.map((f) => f.id));
+      feed = q.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+      if (feedLoaded) {
+        const fresh = feed.filter((f) => !prev.has(f.id) && f.uid !== myId && f.at > lastSeen);
+        if (fresh.length) toast(feedText(fresh[0]), 4500);
+      }
+      feedLoaded = true;
+      if (view === "fil") markSeen();
+      renderBadge(); render();
+    }, err));
+    let start = "semaine"; try { start = localStorage.getItem("cs-view") || "semaine"; } catch (_) {}
+    setView(["semaine", "calendrier", "comptes", "fil"].includes(start) ? start : "semaine");
+  }
+
+
+  // ---- Fil de notifications ----
+  function feedText(f) {
+    const n = f.uid === myId ? "Tu" : nameOf(f.uid);
+    const me = f.uid === myId;
+    switch (f.kind) {
+      case "join": return me ? "Tu as rejoint le groupe." : `${n} a rejoint le groupe.`;
+      case "session": return `${n} ${me ? "es allé" : "est allé"} au sport ${f.day === todayKey() ? "aujourd'hui" : fLong.format(kd(f.day))}. (${f.count}/${GOAL} cette semaine)`;
+      case "goal": return `${n} ${me ? "as" : "a"} accompli ${me ? "ta" : "sa"} semaine : ${GOAL} séances sur ${weekLabel(f.week)}. ${me ? "Tu ne paies pas" : "Pas de 5 € pour toi de ce côté"} !`;
+      case "joker": return `${n} ${me ? "as" : "a"} joué ${me ? "ton" : "son"} joker pour la ${weekLabel(f.week)}.`;
+      case "unjoker": return `${n} ${me ? "as" : "a"} repris ${me ? "ton" : "son"} joker pour la ${weekLabel(f.week)}.`;
+      case "verdict": {
+        const v = verdict(f.week); if (!v) return `Semaine ${weekLabel(f.week)} terminée.`;
+        if (v.cancelled) return `${weekLabel(f.week)} terminée : vous avez tous raté. Personne ne paie, insultes libres.`;
+        if (!v.debts.length) return `${weekLabel(f.week)} terminée : contrat respecté, personne ne paie.`;
+        return `${weekLabel(f.week)} terminée : ` + v.debts.map((d) => `${d.from === myId ? "tu dois" : nameOf(d.from) + " doit"} ${d.amount} € à ${d.to === myId ? "toi" : nameOf(d.to)}`).join(", ") + ".";
+      }
+      case "paid": return `${n} ${me ? "as" : "a"} noté un paiement : ${f.from === myId ? "toi" : nameOf(f.from)} → ${f.to === myId ? "toi" : nameOf(f.to)}, ${f.amount} € (${weekLabel(f.week)}).`;
+      default: return "Mise à jour du groupe.";
+    }
+  }
+  const unread = () => feed.filter((f) => f.uid !== myId && f.at > lastSeen);
+  function markSeen() {
+    const top = feed[0] ? feed[0].at : 0;
+    if (top > lastSeen) { lastSeen = top; try { localStorage.setItem("cs-seen-" + cur, String(lastSeen)); } catch (_) {} }
+    renderBadge();
+  }
+  function renderBadge() { const n = unread().length; const b = $("fil-badge"); b.hidden = !n || view === "fil"; b.textContent = n > 9 ? "9+" : String(n); }
+  // Une note par semaine terminée, écrite par le premier qui ouvre l'app ensuite (id fixe : pas de doublon)
+  let verdictTried = {};
+  async function writeVerdictNote() {
+    if (!canWrite || memberIds().length < 2) return;
+    const fw = finishedWeeks(); const w = fw[fw.length - 1];
+    if (!w || verdictTried[cur + w]) return;
+    verdictTried[cur + w] = true;
+    const ref = db.doc(`groups/${cur}/feed/verdict_${w}`);
+    try { const s = await ref.get(); if (!s.exists) await ref.set({ kind: "verdict", week: w, at: Date.now() }); } catch (_) {}
+  }
+
+  // ---- Actions ----
+  async function shrinkImage(file) {
+    if (!/^image\/(jpeg|png|webp|heic|heif)$/.test(file.type) || file.size < 1.5 * 1024 * 1024) return file;
+    try {
+      const bmp = await createImageBitmap(file);
+      const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+      const cv = document.createElement("canvas"); cv.width = Math.round(bmp.width * k); cv.height = Math.round(bmp.height * k);
+      cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+      return (await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.85))) || file;
+    } catch (_) { return file; }
+  }
+  // Photo réduite et stockée dans la base (moins de 700 Ko)
+  async function photoData(file) {
+    const bmp = await createImageBitmap(file);
+    for (const [side, q] of [[1280, .78], [1024, .7], [800, .65], [640, .6]]) {
+      const k = Math.min(1, side / Math.max(bmp.width, bmp.height));
+      const cv = document.createElement("canvas"); cv.width = Math.round(bmp.width * k); cv.height = Math.round(bmp.height * k);
+      cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+      const url = cv.toDataURL("image/jpeg", q);
+      if (url.length < 700000) return url;
+    }
+    throw new Error("toobig");
+  }
+  const photoCache = {};
+  async function uploadProof(file) {
+    if (!file) return null;
+    if (!file.type.startsWith("image/")) throw new Error("notimage");
+    const data = await photoData(file);
+    const ref = await db.collection(`groups/${cur}/photos`).add({ data, uid: myId, at: Date.now() });
+    return { id: ref.id, kind: "image" };
+  }
+  function mediaEl(m) {
+    if (!m || !m.id) return null;
+    let node;
+    if (m.kind === "video") { node = el("video", "media"); node.controls = true; node.playsInline = true; node.preload = "metadata"; }
+    else { node = el("img", "media"); node.alt = "Preuve de la séance"; node.loading = "lazy"; }
+    node.onerror = () => node.replaceWith(el("div", "media-miss", "Preuve envoyée, mais elle ne s'affiche pas sur cet appareil."));
+    const p = photoCache[m.id] || (photoCache[m.id] = db.doc(`groups/${cur}/photos/${m.id}`).get().then((x) => (x.exists ? x.data().data : null)));
+    p.then((src) => { if (src) node.src = src; else node.onerror(); }).catch(() => node.onerror());
+    return node;
+  }
+
+  async function logSession(day, note, media) {
+    const w = mondayOf(day);
+    const before = countWeek(myId, w);
+    justLogged = day; setTimeout(() => { justLogged = null; }, 1500);
+    await db.doc(`groups/${cur}/sessions/${myId}_${day}`).set({ uid: myId, day, week: w, at: Date.now(), note: note || "", media: media || null });
+    const count = before + 1;
+    try { await db.collection(`groups/${cur}/feed`).add({ kind: "session", uid: myId, day, week: w, count, at: Date.now(), media: media || null, note: note || "" }); } catch (_) {}
+    if (count === GOAL) {
+      try { await db.doc(`groups/${cur}/feed/goal_${myId}_${w}`).set({ kind: "goal", uid: myId, week: w, at: Date.now() + 1 }); } catch (_) {}
+      setTimeout(() => toast(`Semaine validée ! ${goalMsg(myId, w)}`, 5500), 400); confetti(180);
+    } else { toast(count > GOAL ? "Séance bonus notée. Machine." : `Séance notée (${count}/${GOAL}). Encore ${GOAL - count} !`); confetti(50); }
+  }
+  async function removeSession(day) {
+    await db.doc(`groups/${cur}/sessions/${myId}_${day}`).delete();
+    const w = mondayOf(day);
+    if (countWeek(myId, w) < GOAL) { try { await db.doc(`groups/${cur}/feed/goal_${myId}_${w}`).delete(); } catch (_) {} }
+    toast("Séance retirée.");
+  }
+  async function playJoker(w) {
+    await db.doc(`groups/${cur}/jokers/${myId}_${w}`).set({ uid: myId, week: w, at: Date.now() });
+    try { await db.collection(`groups/${cur}/feed`).add({ kind: "joker", uid: myId, week: w, at: Date.now() }); } catch (_) {}
+    toast("Joker joué pour cette semaine.");
+  }
+  async function cancelJoker(w) {
+    await db.doc(`groups/${cur}/jokers/${myId}_${w}`).delete();
+    try { await db.collection(`groups/${cur}/feed`).add({ kind: "unjoker", uid: myId, week: w, at: Date.now() }); } catch (_) {}
+  }
+  async function togglePaid(d) {
+    const ref = db.doc(`groups/${cur}/payments/${d.id}`);
+    if (payments[d.id]) { await ref.delete(); return; }
+    await ref.set({ from: d.from, to: d.to, amount: d.amount, week: d.id.slice(0, 10), by: myId, at: Date.now() });
+    try { await db.collection(`groups/${cur}/feed`).add({ kind: "paid", uid: myId, from: d.from, to: d.to, amount: d.amount, week: d.id.slice(0, 10), at: Date.now() }); } catch (_) {}
+  }
+
+  // ---- Fenêtres ----
+  function openSheet(build) { const s = $("sheet"); s.replaceChildren(); build(s); $("scrim").hidden = false; }
+  function closeSheet() { $("scrim").hidden = true; $("sheet").replaceChildren(); }
+  $("scrim").addEventListener("click", (e) => { if (e.target === $("scrim")) closeSheet(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("scrim").hidden) closeSheet(); });
+  function sheetHead(s, title) {
+    const h = el("div", "between"); h.append(el("h2", null, title));
+    const c = el("button", "btn quiet", "Fermer"); c.type = "button"; c.onclick = closeSheet; h.append(c); s.append(h);
+  }
+  const canLogDay = (day) => day <= todayKey() && day >= addDays(todayKey(), -7);
+
+  function openLog(day) {
+    openSheet((s) => {
+      sheetHead(s, "Séance du " + fLong.format(kd(day)));
+      s.append(el("p", "sub", "Le contrat demande une preuve : une photo de la salle, de l'appli ou de toi en sueur. Elle est facultative ici, mais ton binôme la verra."));
+      const fr = el("div", "file-row");
+      const inp = el("input"); inp.type = "file"; inp.accept = "image/*"; inp.id = "proof-file";
+      const lab = el("label", "btn ghost small", "Ajouter une photo"); lab.htmlFor = inp.id;
+      const fname = el("span", "file-name", assets ? "Aucune photo" : "Envoi de photos indisponible avec ton accès : décris ta séance.");
+      if (!assets) lab.hidden = true;
+      fr.append(inp, lab, fname);
+      const prev = el("div"); let file = null;
+      inp.onchange = () => {
+        file = (inp.files && inp.files[0]) || null; prev.replaceChildren();
+        fname.textContent = file ? `${file.name} · ${(file.size / 1048576).toFixed(1)} Mo` : "Aucune photo";
+        if (file) { const n = file.type.startsWith("video/") ? el("video", "media") : el("img", "media"); if (n.tagName === "VIDEO") { n.muted = true; n.controls = true; n.playsInline = true; } n.src = URL.createObjectURL(file); prev.append(n); }
+      };
+      const ta = el("textarea"); ta.id = "proof-note"; ta.maxLength = 200; ta.placeholder = "Ce que tu as fait (ex : jambes, 45 min)";
+      const b = el("button", "btn big", "J'y suis allé"); b.type = "button";
+      const e = el("p", "err");
+      b.onclick = async () => {
+        e.textContent = ""; b.disabled = true; b.textContent = file ? "Envoi de la photo…" : "Enregistrement…";
+        try { const media = await uploadProof(file); await logSession(day, ta.value.trim().slice(0, 200), media); closeSheet(); }
+        catch (err) {
+          e.textContent = err && err.message === "toobig" ? "Photo trop lourde, essaie-en une autre." : err && err.message === "notimage" ? "Seules les photos sont acceptées." : "Séance non enregistrée. Réessaie.";
+          b.disabled = false; b.textContent = "J'y suis allé";
+        }
+      };
+      s.append(fr, prev, ta, b, e);
+    });
+  }
+  function openView(uid, day) {
+    const ses = sessionOf(uid, day); if (!ses) return;
+    openSheet((s) => {
+      sheetHead(s, (uid === myId ? "Ta séance" : "Séance de " + nameOf(uid)) + " · " + fLong.format(kd(day)));
+      const m = mediaEl(ses.media); if (m) s.append(m); else s.append(el("p", "sub", "Pas de photo pour cette séance."));
+      if (ses.note) s.append(el("p", null, ses.note));
+      s.append(el("p", "sub", "Notée " + whenText(ses.at) + "."));
+      if (uid === myId && canWrite && !weekOver(mondayOf(day))) {
+        const d = el("button", "btn danger", "Retirer cette séance"); d.type = "button";
+        confirmBtn(d, "Appuie encore pour retirer", async () => { await removeSession(day); closeSheet(); });
+        s.append(d);
+      }
+    });
+  }
+  function inviteText() { return `Rejoins notre contrat sport : ouvre ${APP_URL}#${cur} puis ajoute l'app à ton écran d'accueil. Code du groupe : ${cur}.`; }
+  function openGroupSheet() {
+    openSheet((s) => {
+      sheetHead(s, groupNames[cur] || "Groupe");
+      const box = el("div", "codebox");
+      box.append(el("span", "label", "Code d'invitation"), el("div", "code", cur));
+      const r = el("div", "row");
+      const txt = el("div", "link-out", inviteText());
+      const b1 = el("button", "btn", "Copier l'invitation"); b1.type = "button"; b1.onclick = () => copy(inviteText(), "Invitation copiée", txt);
+      const b2 = el("button", "btn ghost", "Copier le code"); b2.type = "button"; b2.onclick = () => copy(cur, "Code copié");
+      r.append(b1, b2); box.append(r, txt); s.append(box);
+      const ml = el("div", "stack"); ml.style.gap = "6px";
+      ml.append(el("span", "label", `Membres (${memberIds().length})`));
+      const ul = el("ul", "list");
+      memberIds().forEach((id) => { const li = el("li"); const t = el("div", "row"); t.append(avatar(id, true), el("span", null, nameOf(id) + (id === myId ? " (toi)" : ""))); li.append(t, el("span", "sub", "depuis le " + short(fmtToday.format(new Date(members[id].joinedAt || Date.now()))))); ul.append(li); });
+      ml.append(ul); s.append(ml);
+      if (myGroups.length > 1) {
+        const gl = el("div", "stack"); gl.style.gap = "6px"; gl.append(el("span", "label", "Mes groupes"));
+        const ul2 = el("ul", "list");
+        myGroups.forEach((c) => { const li = el("li"); li.append(el("span", null, groupNames[c] || c)); if (c === cur) li.append(el("span", "pill ok", "Ouvert")); else { const b = el("button", "btn ghost small", "Ouvrir"); b.type = "button"; b.onclick = () => { closeSheet(); openGroup(c); }; li.append(b); } ul2.append(li); });
+        gl.append(ul2); s.append(gl);
+      }
+      const act = el("div", "between");
+      const add = el("button", "btn ghost", "Créer ou rejoindre un groupe"); add.type = "button";
+      add.onclick = () => { closeSheet(); closeGroup(); show("onboard"); $("boot-note").textContent = ""; const back = el("button", "btn quiet", "Revenir au groupe"); back.type = "button"; back.onclick = () => openGroup(cur); $("boot-note").replaceChildren(back); };
+      const leave = el("button", "btn danger", "Quitter ce groupe"); leave.type = "button";
+      confirmBtn(leave, "Appuie encore pour quitter", leaveGroup);
+      act.append(add, leave); s.append(act);
+    });
+  }
+  $("group-btn").onclick = openGroupSheet;
+
+  // ---- Rendu ----
+  function renderHeader() { const n = groupNames[cur] || "Groupe"; $("group-name").textContent = n; $("group-dot").textContent = initial(n); }
+  function render() {
+    if (!cur) return;
+    if (view === "semaine") renderSemaine();
+    else if (view === "calendrier") renderCalendrier();
+    else if (view === "comptes") renderComptes();
+    else if (view === "fil") renderFil();
+  }
+  function statusPill(r, uid, w) {
+    const n = countWeek(uid, w);
+    if (r === "ok") return el("span", "pill ok", "Semaine validée");
+    if (r === "joker") return el("span", "pill joker", "Joker");
+    if (r === "fail") return el("span", "pill bad", "Ratée · 5 €");
+    if (r === "running") return el("span", "pill wait", `Encore ${GOAL - n}`);
+    if (r === "before") return el("span", "pill wait", "Avant le contrat");
+    return el("span", "pill wait", "À venir");
+  }
+
+  function renderSemaine() {
+    const root = $("view-semaine"); root.replaceChildren();
+    const today = todayKey(), thisWk = mondayOf(today);
+    const minWk = mondayOf(YEARS[0] + "-01-01"), maxWk = mondayOf(YEARS[YEARS.length - 1] + "-12-31");
+
+    // Navigation entre les semaines
+    const bar = el("div", "weekbar");
+    const pv = el("button", "nav-btn", "‹"); pv.type = "button"; pv.setAttribute("aria-label", "Semaine précédente"); pv.disabled = wk <= minWk; pv.onclick = () => { wk = addDays(wk, -7); render(); };
+    const nx = el("button", "nav-btn", "›"); nx.type = "button"; nx.setAttribute("aria-label", "Semaine suivante"); nx.disabled = wk >= maxWk; nx.onclick = () => { wk = addDays(wk, 7); render(); };
+    const mid = el("div", "mid");
+    mid.append(el("div", "wk-num", `Semaine ${isoWeek(wk)}`), el("div", "wk-range", rangeLabel(wk) + " " + thursday(wk).slice(0, 4)));
+    if (wk !== thisWk) { const t = el("button", "btn quiet small", "Revenir à cette semaine"); t.type = "button"; t.onclick = () => { wk = thisWk; render(); }; mid.append(t); }
+    bar.append(pv, mid, nx);
+    if (members[myId] && wk >= startWeek()) root.append(heroCard(wk));
+    root.append(bar);
+
+    // Notifications non lues
+    const un = unread();
+    if (un.length) {
+      const a = el("div", "alert");
+      a.append(el("strong", null, un.length > 1 ? `${un.length} nouvelles du groupe` : "Nouveau dans le groupe"));
+      un.slice(0, 3).forEach((f) => { a.append(el("span", null, feedText(f))); if (f.kind === "goal") { const c = el("div", "coach"); c.append(el("q", null, goalMsg(f.uid, f.week))); a.append(c); } });
+      const b = el("button", "btn quiet small", "Tout voir dans le fil"); b.type = "button"; b.style.alignSelf = "flex-start"; b.style.paddingInline = "0"; b.onclick = () => setView("fil");
+      a.append(b); root.append(a);
+    }
+
+
+    const v = verdict(wk);
+    if (v) root.append(verdictBox(v, wk));
+
+    // Une carte par sportif
+    memberIds().forEach((uid) => root.append(personCard(uid, wk)));
+    if (memberIds().length < 2) {
+      const c = el("div", "card stack");
+      c.append(el("h3", null, "Invite ton binôme"), el("p", "sub", `Envoie-lui le code ${cur}. Tant qu'il n'a pas rejoint, personne ne paie.`));
+      const b = el("button", "btn", "Copier l'invitation"); b.type = "button"; b.onclick = () => copy(inviteText(), "Invitation copiée"); c.append(b);
+      root.append(c);
+    }
+  }
+
+  function verdictBox(v, w) {
+    const box = el("div", "ticket verdict" + (v.debts.length ? " bad" : v.cancelled ? "" : " ok"));
+    box.style.setProperty("--cut", "44px");
+    box.append(el("span", "label", "Résultat de la semaine"), el("div", "tear"));
+    const vm = verdictMsg(w);
+    if (vm) { const cl = el("div", "coach"); cl.append(el("q", null, vm)); box.append(cl); }
+    if (v.cancelled) { box.append(el("div", "big", "Tout le monde a raté.")); box.append(el("p", "sub", "Les sanctions s'annulent : personne ne paie, mais chacun peut insulter l'autre (article 3).")); }
+    else if (!v.debts.length) { box.append(el("div", "big", "Contrat respecté. Personne ne paie.")); }
+    else {
+      v.debts.forEach((d) => {
+        const paid = payments[d.id];
+        box.append(el("div", "big", `${d.from === myId ? "Tu dois" : nameOf(d.from) + " doit"} ${d.amount} € à ${d.to === myId ? "toi" : nameOf(d.to)}${paid ? " · payé" : ""}`));
+      });
+      box.append(el("p", "sub", `À verser au plus tard le lundi ${short(addDays(w, 7))}. Droit d'insulte inclus (article 3).`));
+    }
+    return box;
+  }
+
+  function personCard(uid, w) {
+    const today = todayKey(), mine = uid === myId;
+    const c = el("div", "card p-card");
+    const n = countWeek(uid, w), r = result(uid, w);
+    const head = el("div", "p-head");
+    const nm = el("div", "p-name"); nm.textContent = (mine ? (names[uid] || "Toi") : nameOf(uid)) + " "; if (mine) nm.append(el("em", null, "toi"));
+    const sc = el("div", "score", String(n)); sc.append(el("small", null, " / " + GOAL));
+    head.append(avatar(uid), (() => { const x = el("div"); x.style.minWidth = "0"; x.append(nm, statusPill(r, uid, w)); return x; })(), sc);
+    c.append(head);
+    const meter = el("div", "meter"); for (let i = 0; i < GOAL; i++) meter.append(el("i", i < n ? "on" : "")); c.append(meter);
+
+    const days = el("div", "days");
+    for (let i = 0; i < 7; i++) {
+      const day = addDays(w, i), ses = sessionOf(uid, day);
+      const b = el("button", "day"); b.type = "button";
+      b.append(el("span", null, LETTERS[i]));
+      if (ses) { const ck = document.createElementNS(SVGNS, "svg"); ck.setAttribute("viewBox", "0 0 24 24"); ck.setAttribute("class", "ck"); const pa = document.createElementNS(SVGNS, "path"); pa.setAttribute("d", "M5 12.5l4.5 4.5L19 7.5"); ck.append(pa); b.append(ck); }
+      else b.append(el("b", null, String(+day.slice(8))));
+      if (ses && mine && day === justLogged) b.classList.add("pop");
+      b.setAttribute("aria-label", `${DAYNAMES[i]} ${short(day)}${ses ? " : séance faite" : ""}`);
+      if (ses) { b.classList.add("done"); if (ses.media) b.append(el("i", "pic")); }
+      if (day === today) b.classList.add("today");
+      if (day > today) { b.classList.add("future"); b.disabled = true; }
+      if (ses) b.onclick = () => openView(uid, day);
+      else if (mine && canWrite && canLogDay(day)) b.onclick = () => openLog(day);
+      else { b.classList.add("ro"); if (!b.disabled) b.onclick = () => toast(mine ? "Trop tard pour noter ce jour-là." : `${nameOf(uid)} n'a pas noté de séance ce jour-là.`); }
+      days.append(b);
+    }
+    c.append(days);
+
+    // Conseil, alerte et joker
+    if (r === "running") {
+      const left = 7 - ((kd(today) - kd(w)) / 864e5) - (sessionOf(uid, today) ? 1 : 0);
+      const need = GOAL - n;
+      const msg = need > left
+        ? (mine ? `${left ? `Il ne reste que ${left} jour${left > 1 ? "s" : ""}` : "Plus aucun jour"} pour ${need} séance${need > 1 ? "s" : ""} : c'est mort. Joue ton joker ou prépare 5 €.` : `${nameOf(uid)} ne peut plus faire ses ${GOAL} séances cette semaine.`)
+        : (mine ? `Encore ${need} séance${need > 1 ? "s" : ""} d'ici dimanche (${left} jour${left > 1 ? "s" : ""} restant${left > 1 ? "s" : ""}).` : `${nameOf(uid)} doit encore faire ${need} séance${need > 1 ? "s" : ""}.`);
+      c.append(el("p", "sub", msg));
+    }
+    if (mine && canWrite && !weekOver(w) && w >= startWeek() && w <= mondayOf(today) && n < GOAL) {
+      const js = jokerStatus(uid, w);
+      const row = el("div", "between");
+      if (js.s === "active") {
+        row.append(el("span", "sub", "Joker joué : cette semaine ne compte pas."));
+        const b = el("button", "btn ghost small", "Reprendre mon joker"); b.type = "button";
+        confirmBtn(b, "Appuie encore pour reprendre", () => cancelJoker(w)); row.append(b);
+      } else if (js.s === "free") {
+        row.append(el("span", "sub", "1 joker dispo ce mois-ci."));
+        const b = el("button", "btn joker small", "Jouer mon joker"); b.type = "button";
+        confirmBtn(b, "Appuie encore pour confirmer", () => playJoker(w)); row.append(b);
+      } else row.append(el("span", "sub", js.s === "used" ? `Joker déjà utilisé ce mois-ci (${weekLabel(js.week)}).` : `Pas de joker ce mois-ci : tu l'as utilisé le mois dernier (${weekLabel(js.week)}).`));
+      c.append(row);
+    } else if (!mine && jokerOf(uid, w) && n < GOAL) c.append(el("p", "sub", `${nameOf(uid)} a joué son joker cette semaine.`));
+    if (!mine && r === "ok") { const cl = el("div", "coach"); cl.append(el("q", null, goalMsg(uid, w))); c.append(cl); }
+    return c;
+  }
+
+  function ring(n, size) {
+    const big = size === "big", S = big ? 104 : 34, sw = big ? 10 : 4.5, r = (S - sw) / 2, C = 2 * Math.PI * r;
+    const svg = document.createElementNS(SVGNS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${S} ${S}`); svg.setAttribute("width", S); svg.setAttribute("height", S); svg.setAttribute("class", "ring");
+    svg.setAttribute("aria-label", `${n} séance${n > 1 ? "s" : ""} sur ${GOAL}`);
+    const mk = (cls, off) => { const c = document.createElementNS(SVGNS, "circle"); c.setAttribute("cx", S / 2); c.setAttribute("cy", S / 2); c.setAttribute("r", r); c.setAttribute("fill", "none"); c.setAttribute("stroke-width", sw); c.setAttribute("class", cls);
+      if (off != null) { c.setAttribute("stroke-linecap", "round"); c.setAttribute("stroke-dasharray", C); c.setAttribute("stroke-dashoffset", off); c.setAttribute("transform", `rotate(-90 ${S / 2} ${S / 2})`); } return c; };
+    svg.append(mk("trk"), mk("arc", C * (1 - Math.min(n, GOAL) / GOAL)));
+    if (big) {
+      const t = document.createElementNS(SVGNS, "text"); t.setAttribute("x", S / 2); t.setAttribute("y", S / 2 + 2); t.setAttribute("text-anchor", "middle"); t.setAttribute("dominant-baseline", "middle"); t.setAttribute("font-size", "34");
+      t.textContent = Math.min(n, 9) + "/" + GOAL; t.setAttribute("font-size", "30"); svg.append(t);
+    }
+    return svg;
+  }
+  function heroCard(w) {
+    const today = todayKey(), thisWk = mondayOf(today), n = countWeek(myId, w), r = result(myId, w);
+    const first = (names[myId] || "").split(" ")[0];
+    const h = el("div", "hero");
+    const top = el("div", "hero-top"); const txt = el("div");
+    let line;
+    if (r === "ok") line = n > GOAL ? `${n} séances. Tu es en feu.` : "Semaine validée. Bien joué !";
+    else if (r === "joker") line = "Joker joué. Souffle un coup.";
+    else if (r === "fail") line = "Semaine ratée. 5 € et quelques insultes.";
+    else if (n === 0) line = "C'est parti : 3 séances à caser.";
+    else line = `Encore ${GOAL - n}, tu y es presque.`;
+    txt.append(el("div", "hero-eyebrow", w === thisWk ? (first ? `Salut ${first} · ` : "") + fLong.format(kd(today)) : `Ta semaine ${isoWeek(w)}`), el("div", "hero-title", line));
+    top.append(txt, ring(n, "big")); h.append(top);
+    if (r === "ok") { const cb = el("div", "coach-bubble"); cb.append(el("small", null, "Le coach"), document.createTextNode(goalMsg(myId, w))); h.append(cb); }
+    const other = memberIds().find((i) => i !== myId);
+    if (other) {
+      const on = countWeek(other, w), or = result(other, w);
+      const vs = el("div", "hero-vs");
+      vs.append(avatar(other, true), el("span", null, `${nameOf(other)} · ${or === "ok" ? "validé" : or === "joker" ? "joker" : or === "fail" ? "raté" : on + "/" + GOAL}`), ring(on, "mini"));
+      h.append(vs);
+    }
+    if (w === thisWk && canWrite) {
+      if (!sessionOf(myId, today)) { const b = el("button", "btn big", "J'ai été au sport aujourd'hui"); b.type = "button"; b.onclick = () => openLog(today); h.append(b); }
+      else { const d = el("div", "done-note"); const ck = document.createElementNS(SVGNS, "svg"); ck.setAttribute("viewBox", "0 0 24 24"); const pa = document.createElementNS(SVGNS, "path"); pa.setAttribute("d", "M5 12.5l4.5 4.5L19 7.5"); ck.append(pa); d.append(ck, el("span", null, "Séance du jour cochée. Repos mérité.")); h.append(d); }
+    }
+    return h;
+  }
+  function confetti(count) {
+    try { if (matchMedia("(prefers-reduced-motion: reduce)").matches) return; } catch (_) {}
+    const cv = $("confetti"); cv.hidden = false;
+    const dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    const ctx = cv.getContext("2d"); ctx.scale(dpr, dpr);
+    const cols = ["#ff8a3d", "#ff5a5f", "#ff4f8b", "#ffc93d", "#ffffff", "#23a26d"];
+    const ps = Array.from({ length: count }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .38, vx: (Math.random() - .5) * 13, vy: -Math.random() * 13 - 4, s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[(Math.random() * cols.length) | 0], round: Math.random() < .35 }));
+    const t0 = performance.now();
+    (function frame(t) {
+      const k = (t - t0) / 1800; ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ps.forEach((p) => { p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; ctx.save(); ctx.globalAlpha = Math.max(0, 1 - k); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.s / 2, 0, 7); ctx.fill(); } else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); });
+      if (k < 1) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); cv.hidden = true; }
+    })(t0);
+  }
+
+
+  function renderEvolution(root) {
+    const ids = seriesIds(); if (!ids.length) return;
+    const thisWk = mondayOf(todayKey());
+    let weeks = []; let w = startWeek();
+    while (w <= thisWk) { weeks.push(w); w = addDays(w, 7); }
+    while (weeks.length < 8) { weeks.push(w); w = addDays(w, 7); }
+    if (weeks.length > 52) weeks = weeks.slice(-52);
+    const data = weeks.map((wkey) => ({ w: wkey, future: wkey > thisWk, v: ids.map((id) => ({ id, n: wkey > thisWk ? 0 : countWeek(id, wkey), r: result(id, wkey) })) }));
+    const maxN = Math.max(GOAL + 1, ...data.flatMap((d) => d.v.map((x) => x.n)));
+
+    const card = el("div", "card stack");
+    const hd = el("div"); hd.append(el("h2", null, "Votre évolution"), el("p", "sub", "Séances par semaine depuis le début du contrat. Touche une semaine pour le détail."));
+    card.append(hd);
+    const lg = el("div", "chart-legend");
+    ids.forEach((id) => { const s = el("span"); const i = el("i"); i.style.background = colorFor(id); s.append(i, document.createTextNode(id === myId ? "Toi" : firstName(id))); lg.append(s); });
+    const gk = el("span", "goal-key"); gk.append(el("i"), document.createTextNode(`Objectif ${GOAL}`)); lg.append(gk);
+    card.append(lg);
+
+    // Géométrie : une colonne par semaine, barres fines côte à côte, ligne d'objectif en pointillés
+    const H = 180, top = 10, bottom = 26, left = 22, gw = 50, bw = Math.min(14, (gw - 18) / ids.length - 2);
+    const W = left + data.length * gw + 6, ph = H - top - bottom;
+    const y = (n) => top + ph - (n / maxN) * ph;
+    const svg = document.createElementNS(SVGNS, "svg");
+    svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Séances par semaine pour chaque membre");
+    const mk = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+    for (let t = 0; t <= maxN; t++) svg.append(mk("line", { x1: left, x2: W, y1: y(t), y2: y(t), stroke: "var(--grid)", "stroke-width": t === 0 ? 1.5 : 1 }));
+    const hits = [];
+    data.forEach((d, i) => {
+      const gx = left + i * gw;
+      const hit = mk("rect", { x: gx + 2, y: top - 6, width: gw - 4, height: ph + 6, rx: 8, class: "hit" });
+      svg.append(hit); hits.push(hit);
+      const tot = ids.length * bw + (ids.length - 1) * 3, x0 = gx + (gw - tot) / 2;
+      d.v.forEach((x, j) => {
+        const bx = x0 + j * (bw + 3);
+        if (x.n > 0) {
+          const by = y(x.n), r = Math.min(4, bw / 2), base = y(0);
+          svg.append(mk("path", { d: `M${bx},${base} V${by + r} Q${bx},${by} ${bx + r},${by} H${bx + bw - r} Q${bx + bw},${by} ${bx + bw},${by + r} V${base} Z`, fill: colorFor(x.id), opacity: d.w === thisWk ? .9 : 1 }));
+        } else if (!d.future && x.r !== "before") svg.append(mk("rect", { x: bx, y: y(0) - 3, width: bw, height: 3, rx: 1.5, fill: colorFor(x.id), opacity: .35 }));
+        if (x.r === "joker") { const tj = mk("text", { x: bx + bw / 2, y: y(x.n) - 5, "text-anchor": "middle" }); tj.textContent = "J"; tj.style.fill = "var(--joker)"; tj.style.fontWeight = "700"; svg.append(tj); }
+      });
+      const lb = mk("text", { x: gx + gw / 2, y: H - 8, "text-anchor": "middle", class: d.w === thisWk ? "cur" : "" });
+      lb.textContent = "S" + isoWeek(d.w); if (d.future) lb.style.opacity = ".5"; svg.append(lb);
+    });
+    svg.append(mk("line", { x1: left, x2: W, y1: y(GOAL), y2: y(GOAL), stroke: "var(--accent)", "stroke-width": 2, "stroke-dasharray": "5 4", "pointer-events": "none" }));
+
+    const wrap = el("div", "chart-wrap");
+    const sc = el("div", "chart-scroll"); sc.append(svg);
+    wrap.append(sc);
+    for (let t = 0; t <= maxN; t++) { const yt = el("span", "ytick", String(t)); yt.style.top = y(t) + "px"; wrap.append(yt); }
+    const tip = el("div", "tip"); tip.hidden = true; wrap.append(tip);
+    const showTip = (i) => {
+      const d = data[i]; hits.forEach((h, k) => h.classList.toggle("on", k === i));
+      tip.replaceChildren(el("b", null, weekLabel(d.w)));
+      if (d.future) tip.append(el("span", null, "À venir"));
+      else d.v.forEach((x) => { const s = el("span"); const ii = el("i"); ii.style.background = colorFor(x.id);
+        const st = x.r === "ok" ? "validé" : x.r === "joker" ? "joker" : x.r === "fail" ? "raté" : x.r === "running" ? "en cours" : "";
+        s.append(ii, document.createTextNode(`${x.id === myId ? "Toi" : firstName(x.id)} : ${x.n} séance${x.n > 1 ? "s" : ""}${st ? " · " + st : ""}`)); tip.append(s); });
+      tip.hidden = false;
+      const gx = left + i * gw - sc.scrollLeft + gw / 2, ww = wrap.clientWidth, tw = tip.offsetWidth;
+      tip.style.left = Math.max(0, Math.min(ww - tw, gx - tw / 2)) + "px";
+      tip.style.top = "-6px"; tip.style.transform = "translateY(-100%)";
+    };
+    const hideTip = () => { tip.hidden = true; hits.forEach((h) => h.classList.remove("on")); };
+    hits.forEach((h, i) => { h.addEventListener("pointerenter", () => showTip(i)); h.addEventListener("click", () => showTip(i)); });
+    svg.addEventListener("pointerleave", hideTip); sc.addEventListener("scroll", hideTip);
+    card.append(wrap);
+    requestAnimationFrame(() => { const ci = data.findIndex((d) => d.w === thisWk); sc.scrollLeft = Math.max(0, left + (ci + 1) * gw - sc.clientWidth + gw); });
+
+    // Tableau pour lire les chiffres exacts
+    const det = el("details", "tbl"); det.append(el("summary", null, "Voir les chiffres en tableau"));
+    const tw = el("div", "tw"); const tb = el("table"); const tr0 = el("tr"); tr0.append(el("th", null, "Semaine"));
+    ids.forEach((id) => tr0.append(el("th", null, id === myId ? "Toi" : firstName(id)))); tb.append(tr0);
+    data.filter((d) => !d.future).slice().reverse().forEach((d) => { const tr = el("tr"); tr.append(el("td", null, weekLabel(d.w))); d.v.forEach((x) => tr.append(el("td", null, x.n + (x.r === "joker" ? " (joker)" : x.r === "fail" ? " (raté)" : "")))); tb.append(tr); });
+    tw.append(tb); det.append(tw); card.append(det);
+    root.append(card);
+
+    // Le duel : totaux et séries
+    const fw = finishedWeeks();
+    const stats = ids.map((id) => {
+      let total = 0; Object.values(sessions).forEach((x) => { if (x.uid === id && x.day >= startWeek()) total++; });
+      const done = fw.filter((w2) => result(id, w2) === "ok").length;
+      let cur = streakOf(id, result(id, thisWk) === "ok" ? thisWk : addDays(thisWk, -7));
+      let best = 0, run = 0; fw.concat(result(id, thisWk) === "ok" ? [thisWk] : []).forEach((w2) => { run = result(id, w2) === "ok" ? run + 1 : 0; best = Math.max(best, run); });
+      let paid = 0; fw.forEach((w2) => { const v = verdict(w2); if (v) v.debts.forEach((dd) => { if (dd.from === id) paid += dd.amount; }); });
+      return { id, total, done: done + (result(id, thisWk) === "ok" ? 1 : 0), cur, best, paid };
+    });
+    const dc = el("div", "card stack"); dc.append(el("h2", null, "Le duel"));
+    const g = el("div", "duel"); g.style.setProperty("--cols", ids.length);
+    g.append(el("span"));
+    ids.forEach((id) => { const h = el("span", "h"); h.append(avatar(id, true)); h.title = nameOf(id); g.append(h); });
+    const rowsDef = [["Séances au total", "total", true], ["Semaines validées", "done", true], ["Série en cours", "cur", true], ["Meilleure série", "best", true], ["Amendes", "paid", false]];
+    rowsDef.forEach(([lab, key, higher]) => {
+      g.append(el("span", "k", lab));
+      const vals = stats.map((st) => st[key]); const best = higher ? Math.max(...vals) : Math.min(...vals);
+      stats.forEach((st) => g.append(el("span", "v" + (ids.length > 1 && st[key] === best && vals.some((v) => v !== best) ? " lead" : ""), key === "paid" ? st[key] + " €" : String(st[key]))));
+    });
+    dc.append(g);
+    const leader = stats.length > 1 ? stats.slice().sort((a, b) => b.total - a.total) : null;
+    if (leader && leader[0].total !== leader[1].total) { const cl = el("div", "coach"); cl.append(el("q", null, `${leader[0].id === myId ? "Tu mènes" : firstName(leader[0].id) + " mène"} avec ${leader[0].total - leader[1].total} séance${leader[0].total - leader[1].total > 1 ? "s" : ""} d'avance. ${leader[1].id === myId ? "À toi de remonter." : "Pas de pitié."}`)); dc.append(cl); }
+    root.append(dc);
+  }
+
+  function renderCalendrier() {
+    const root = $("view-calendrier"); root.replaceChildren();
+    renderEvolution(root);
+    const head = el("div", "between"); head.append(el("h2", null, "Calendrier"));
+    const yt = el("div", "yr-tabs");
+    YEARS.forEach((y) => { const b = el("button", null, String(y)); b.type = "button"; b.setAttribute("aria-pressed", String(y === calYear)); b.onclick = () => { calYear = y; render(); }; yt.append(b); });
+    head.append(yt); root.append(head);
+    const ids = memberIds();
+    const lg = el("div", "legend");
+    ids.forEach((id, i) => { const s = el("span"); s.append(avatar(id, true), document.createTextNode(nameOf(id) + (id === myId ? " (toi)" : ""))); s.querySelector(".av").style.width = s.querySelector(".av").style.height = "20px"; s.querySelector(".av").style.fontSize = ".65rem"; lg.append(s); });
+    [["ok", "Validée"], ["bad", "Ratée"], ["joker", "Joker"], ["run", "En cours"]].forEach(([k, t]) => { const s = el("span"); s.append(el("i", "bdg " + k), document.createTextNode(t)); lg.append(s); });
+    root.append(lg);
+    root.append(el("p", "sub", "Chaque case donne le nombre de séances de la semaine, dans l'ordre des membres ci-dessus. Touche une semaine pour l'ouvrir."));
+
+    const thisWk = mondayOf(todayKey());
+    const byMonth = {};
+    let w = mondayOf(calYear + "-01-04");
+    while (thursday(w).slice(0, 4) === String(calYear)) { const m = monthOfWeek(w); (byMonth[m] = byMonth[m] || []).push(w); w = addDays(w, 7); }
+    Object.keys(byMonth).sort().forEach((m) => {
+      const card = el("div", "card month stack"); card.style.gap = "6px";
+      card.append(el("h3", null, fMonth.format(kd(m + "-01"))));
+      const ul = el("ul", "wk-list");
+      byMonth[m].forEach((wkey) => {
+        const li = el("li"); const b = el("button", "wk-row" + (wkey === thisWk ? " cur" : "")); b.type = "button";
+        b.append(el("span", "n", "S" + isoWeek(wkey)), el("span", "r", rangeLabel(wkey)));
+        const bd = el("span", "badges");
+        ids.forEach((id) => {
+          const r = result(id, wkey), n = countWeek(id, wkey);
+          const cls = r === "ok" ? "ok" : r === "fail" ? "bad" : r === "joker" ? "joker" : r === "running" ? "run" : "";
+          const x = el("span", "bdg " + cls, r === "future" || r === "before" ? "·" : r === "joker" ? "J" : String(n));
+          x.title = nameOf(id); bd.append(x);
+        });
+        b.append(bd);
+        b.onclick = () => { wk = wkey; setView("semaine"); };
+        li.append(b); ul.append(li);
+      });
+      card.append(ul); root.append(card);
+    });
+  }
+
+  function renderComptes() {
+    const root = $("view-comptes"); root.replaceChildren();
+    const ids = memberIds();
+    const all = []; finishedWeeks().forEach((w) => { const v = verdict(w); if (v) v.debts.forEach((d) => all.push(Object.assign({ week: w }, d))); });
+    // Solde net de chaque paire, en ne comptant que ce qui n'est pas encore payé
+    const net = {};
+    all.filter((d) => !payments[d.id]).forEach((d) => { net[d.from] = (net[d.from] || 0) - d.amount; net[d.to] = (net[d.to] || 0) + d.amount; });
+    const top = el("div", "ticket"); top.style.setProperty("--cut", "44px"); top.append(el("span", "label", "Ce qui reste à payer"), el("div", "tear"));
+    const mine = net[myId] || 0;
+    const other = ids.find((i) => i !== myId);
+    top.append(el("div", "balance", mine === 0 ? "Vous êtes quittes." : mine > 0 ? `${other ? nameOf(other) : "Ton binôme"} te doit ${mine} €` : `Tu dois ${-mine} € à ${other ? nameOf(other) : "ton binôme"}`));
+    const totalBy = {}; all.forEach((d) => (totalBy[d.from] = (totalBy[d.from] || 0) + d.amount));
+    top.append(el("p", "sub", ids.map((id) => `${id === myId ? "Toi" : nameOf(id)} : ${totalBy[id] || 0} € d'amendes au total`).join(" · ")));
+    root.append(top);
+
+    const dc = el("div", "card stack"); dc.append(el("h2", null, "Amendes"));
+    const ul = el("ul", "list");
+    if (!all.length) ul.append(el("li", "empty", "Aucune amende pour l'instant. Les comptes se font chaque dimanche soir."));
+    all.slice().reverse().forEach((d) => {
+      const li = el("li"); const t = el("div", "t");
+      t.append(el("span", null, `${d.from === myId ? "Toi" : nameOf(d.from)} → ${d.to === myId ? "toi" : nameOf(d.to)} · `), el("span", "amt", d.amount + " €"));
+      t.append(el("small", null, `${weekLabel(d.week)}${payments[d.id] ? " · payé" : " · à payer avant le lundi " + short(addDays(d.week, 7))}`));
+      const b = el("button", payments[d.id] ? "btn ghost small" : "btn small", payments[d.id] ? "Payé ✓" : "Marquer payé"); b.type = "button"; b.disabled = !canWrite;
+      b.onclick = async () => { b.disabled = true; try { await togglePaid(d); } catch (_) { toast("Impossible d'enregistrer."); b.disabled = false; } };
+      li.append(t, b); ul.append(li);
+    });
+    dc.append(ul); root.append(dc);
+
+    const jc = el("div", "card stack"); jc.append(el("h2", null, "Jokers ce mois-ci"));
+    const ul2 = el("ul", "list"); const cw = mondayOf(todayKey());
+    ids.forEach((id) => {
+      const js = jokerStatus(id, cw); const li = el("li"); const t = el("div", "row"); t.append(avatar(id, true), el("span", null, id === myId ? "Toi" : nameOf(id)));
+      const p = js.s === "free" ? el("span", "pill ok", "Dispo") : js.s === "active" ? el("span", "pill joker", "Joué cette semaine") : js.s === "used" ? el("span", "pill joker", "Utilisé") : el("span", "pill bad", "Bloqué");
+      li.append(t, p); ul2.append(li);
+    });
+    jc.append(ul2); root.append(jc);
+
+    const rc = el("div", "card stack"); rc.append(el("h2", null, "Le contrat"));
+    const ol = el("ol", "rules");
+    [`Chacun va au sport au moins ${GOAL} fois par semaine, du lundi au dimanche, avec une preuve.`,
+     `Celui qui rate verse ${FINE} € à l'autre au plus tard le lundi suivant, et l'autre a le droit de l'insulter, dans un esprit d'amitié.`,
+     "Si les deux ratent la même semaine, personne ne paie, mais chacun peut insulter l'autre.",
+     "Un joker par mois, à annoncer avant la fin de la semaine : il annule la sanction. Pas de report, et celui qui l'utilise n'en a pas le mois suivant."
+    ].forEach((x) => ol.append(el("li", null, x)));
+    rc.append(ol, el("p", "sub", `Contrat suivi depuis la ${weekLabel(startWeek())}. Le mois d'une semaine est celui de son jeudi.`));
+    root.append(rc);
+  }
+
+  function renderFil() {
+    const root = $("view-fil"); root.replaceChildren();
+    const c = el("div", "card stack"); c.append(el("h2", null, "Fil du groupe"));
+    c.append(el("p", "sub", "Chaque séance, chaque semaine accomplie, chaque joker et chaque résultat du dimanche apparaît ici. Quand l'app est ouverte, tu reçois une alerte dès que ton binôme note quelque chose."));
+    const ul = el("ul", "list feed");
+    if (!feed.length) ul.append(el("li", "empty", "Rien pour l'instant. Note ta première séance dans l'onglet Semaine."));
+    const seenBefore = filPrevSeen;
+    feed.forEach((f) => {
+      const li = el("li"); if (f.uid !== myId && f.at > seenBefore) li.classList.add("new");
+      const t = el("div", "t"); t.append(el("span", null, feedText(f)));
+      if (f.note) t.append(el("small", null, f.note));
+      const cm = f.kind === "goal" ? goalMsg(f.uid, f.week) : f.kind === "verdict" ? verdictMsg(f.week) : null;
+      if (cm) { const c = el("div", "coach"); c.append(el("q", null, cm)); t.append(c); }
+      const m = f.kind === "session" ? mediaEl(f.media) : null; if (m) t.append(m);
+      li.append(f.kind === "verdict" ? (() => { const a = el("span", "av s", "€"); a.style.background = "var(--ink)"; a.style.color = "var(--bg)"; return a; })() : avatar(f.uid, true), t, el("span", "when", whenText(f.at)));
+      ul.append(li);
+    });
+    c.append(ul); root.append(c);
+  }
+
+  // ---- Formulaires d'accueil ----
+  $("join-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); $("join-err").textContent = "";
+    const code = cleanCode($("join-code").value);
+    if (code.length !== 6) { $("join-err").textContent = "Le code fait 6 caractères."; return; }
+    if (!myName()) { $("join-err").textContent = "Écris ton prénom juste au-dessus."; $("my-name").focus(); return; }
+    if (!db) { $("join-err").textContent = "L'app n'arrive pas à joindre la base de données. Vérifie ta connexion."; return; }
+    $("join-btn").disabled = true;
+    try { await joinGroup(code); }
+    catch (err) { $("join-err").textContent = err && err.message === "notfound" ? "Aucun groupe avec ce code. Vérifie les lettres." : "Impossible de rejoindre. Vérifie ta connexion et réessaie."; }
+    $("join-btn").disabled = false;
+  });
+  $("create-form").addEventListener("submit", async (e) => {
+    e.preventDefault(); $("create-err").textContent = "";
+    const name = $("create-name").value.trim();
+    if (!name) { $("create-err").textContent = "Donne un nom au groupe."; return; }
+    if (!myName()) { $("create-err").textContent = "Écris ton prénom juste au-dessus."; $("my-name").focus(); return; }
+    if (!db) { $("create-err").textContent = "L'app n'arrive pas à joindre la base de données. Vérifie ta connexion."; return; }
+    $("create-btn").disabled = true;
+    try { await createGroup(name.slice(0, 40)); } catch (_) { $("create-err").textContent = "Groupe non créé. Réessaie."; }
+    $("create-btn").disabled = false;
+  });
+
+  // Rafraîchit à minuit et au retour sur l'app
+  let lastDay = todayKey();
+  setInterval(() => { if (todayKey() !== lastDay) { lastDay = todayKey(); render(); writeVerdictNote(); } }, 60000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) render(); });
+
+  // ---- Démarrage ----
+  async function boot() {
+    try {
+      const cfg = window.FIREBASE_CONFIG;
+      if (!cfg || !cfg.apiKey || !window.firebase) throw new Error("nocfg");
+      firebase.initializeApp(cfg);
+      db = firebase.firestore();
+    } catch (_) { $("boot-note").textContent = "La base de données n'est pas encore branchée. Réessaie dans quelques minutes."; return; }
+    try { $("my-name").value = localStorage.getItem("cs-name") || ""; } catch (_) {}
+    let st = null;
+    try { st = JSON.parse(localStorage.getItem("cs-state") || "null"); } catch (_) {}
+    myGroups = ((st && Array.isArray(st.groups)) ? st.groups : []).filter((c) => myIds[c]);
+    $("boot-note").textContent = "";
+    const hc = cleanCode((location.hash || "").slice(1));
+    if (hc.length === 6 && !myIds[hc]) {
+      $("join-code").value = hc;
+      $("invite-card").hidden = false;
+      $("invite-msg").textContent = `Code du groupe : ${hc}. Écris ton prénom puis touche « Rejoindre ». Pense ensuite à ajouter l'app à ton écran d'accueil.`;
+      show("onboard");
+      if ($("my-name").value.trim()) { try { await joinGroup(hc); } catch (_) { $("join-err").textContent = "Lien d'invitation invalide. Vérifie le code."; } }
+      else $("my-name").focus();
+      return;
+    }
+    const target = hc.length === 6 ? hc : (st && st.current && myIds[st.current] ? st.current : myGroups[0]);
+    if (target) { try { if (!myGroups.includes(target)) myGroups.push(target); await openGroup(target); return; } catch (_) {} }
+    show("onboard");
+  }
+  show("onboard");
+  boot();
+})();
 </script>
 </body>
 </html>
